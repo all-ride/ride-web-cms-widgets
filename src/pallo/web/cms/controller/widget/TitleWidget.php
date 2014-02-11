@@ -30,12 +30,8 @@ class TitleWidget extends AbstractWidget {
      * @return null
      */
     public function indexAction() {
-    	$node = $this->properties->getNode();
-    	$title = $node->getName($this->locale);
-
-        $this->setTemplateView(self::TEMPLATE, array(
-        	'title' => $title,
-        ));
+        // title is being fetched from the context so no template variables needed
+        $this->setTemplateView(self::TEMPLATE);
 
     	if ($this->properties->isAutoCache()) {
     	    $this->properties->setCache(true);
