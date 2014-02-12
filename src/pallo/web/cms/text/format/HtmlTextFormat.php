@@ -35,6 +35,7 @@ class HtmlTextFormat implements TextFormat {
         $formBuilder->addRow(TextWidget::PROPERTY_TEXT, 'text', array(
             'label' => $translator->translate('label.html'),
             'attributes' => array(
+                'class' => 'html',
                 'rows' => '12',
             ),
             'filters' => array(
