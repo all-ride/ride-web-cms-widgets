@@ -2,7 +2,7 @@
     "name": "pallo/web-cms-widgets",
     "description": "Base widget for the CMS application of the Pallo framework",
     "license": "MIT",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "authors": [
         {
             "name": "Joris Vandeweerd",
