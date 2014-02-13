@@ -112,6 +112,7 @@ class MenuWidget extends AbstractWidget {
 
         $this->setTemplateView(self::TEMPLATE, array(
             'title' => $title,
+            'depth' => $depth,
             'nodeTypes' => $nodeModel->getNodeTypeManager()->getNodeTypes(),
             'items' => $nodes,
             'cssClass' => $cssClass
