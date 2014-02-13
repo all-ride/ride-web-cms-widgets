@@ -158,6 +158,7 @@ class TextWidget extends AbstractWidget {
         }
 
         $textFormat = $this->dependencyInjector->get('pallo\\web\\cms\\text\\format\\TextFormat', $data[self::PROPERTY_FORMAT]);
+        $textIo = $this->getTextIO();
 
         // create the form
         $form = $this->createFormBuilder($data);
@@ -168,6 +169,7 @@ class TextWidget extends AbstractWidget {
         ));
 
         $textFormat->processForm($form, $translator, $this->locale);
+        $textIo->processForm($form, $translator, $this->locale, $text);
 
         $form->addRow('io', 'select', array(
             'label' => $translator->translate('label.text.io'),
@@ -197,21 +199,21 @@ class TextWidget extends AbstractWidget {
                     $text->setFormat($data[self::PROPERTY_FORMAT]);
                     $textFormat->setText($text, $data);
 
-                    $io = $this->getTextIO();
                     if ($data['locales-all']) {
                         // take all locales, not only the locales of the node
                         // so when a locale gets enabled in the future, it
                         // holds the required text
                         $locales = $i18n->getLocaleCodeList();
-                        foreach ($locales as $locale) {
-                            $io->setText($this->properties, $locale, $text);
-                        }
+
+                        $textIo->setText($this->properties, $locales, $text, $data);
                     } else {
-                        $io->setText($this->properties, $this->locale, $text);
+                        $textIo->setText($this->properties, $this->locale, $text, $data);
                     }
 
                     return true;
                 } catch (ValidationException $e) {
+                    $this->addError('error.validation');
+
                     $form->setValidationException($e);
                 }
             }
