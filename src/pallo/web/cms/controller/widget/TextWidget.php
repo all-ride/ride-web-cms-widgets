@@ -163,7 +163,7 @@ class TextWidget extends AbstractWidget {
         // create the form
         $form = $this->createFormBuilder($data);
         $form->setId('form-text');
-        $form->addRow('format', 'select', array(
+        $form->addRow(self::PROPERTY_FORMAT, 'select', array(
             'label' => $translator->translate('label.text.format'),
             'options' => $formatOptions,
         ));
@@ -171,7 +171,7 @@ class TextWidget extends AbstractWidget {
         $textFormat->processForm($form, $translator, $this->locale);
         $textIo->processForm($form, $translator, $this->locale, $text);
 
-        $form->addRow('io', 'select', array(
+        $form->addRow(self::PROPERTY_IO, 'select', array(
             'label' => $translator->translate('label.text.io'),
             'options' => $ioOptions,
         ));
@@ -195,6 +195,9 @@ class TextWidget extends AbstractWidget {
                     $data = $form->getData();
 
                     $this->properties->setWidgetProperty(self::PROPERTY_IO, $data['io']);
+
+                    $textFormat = $this->dependencyInjector->get('pallo\\web\\cms\\text\\format\\TextFormat', $data[self::PROPERTY_FORMAT]);
+                    $textIo = $this->getTextIO();
 
                     $text->setFormat($data[self::PROPERTY_FORMAT]);
                     $textFormat->setText($text, $data);
