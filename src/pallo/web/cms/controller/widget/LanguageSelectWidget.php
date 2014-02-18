@@ -43,15 +43,30 @@ class LanguageSelectWidget extends AbstractWidget {
 
         $urls = array();
 
+        $content = $this->getContext('content');
+        if (isset($content->type)) {
+            $contentMapper = $this->getContentFacade()->getContentMapper($content->type);
+            $site = $node->getRootNodeId();
+        } else {
+            $content = null;
+        }
+
         foreach ($locales as $localeCode => $locale) {
             if (!$node->isAvailableInLocale($localeCode)) {
                 continue;
             }
 
-            $urls[$localeCode] = array(
-                'url' => $baseScript . $node->getRoute($localeCode),
-                'locale' => $locale,
-            );
+            if ($content) {
+                $urls[$localeCode] = array(
+                    'url' => $contentMapper->getUrl($site, $localeCode, $content->data),
+                    'locale' => $locale,
+                );
+            } else {
+                $urls[$localeCode] = array(
+                    'url' => $baseScript . $node->getRoute($localeCode),
+                    'locale' => $locale,
+                );
+            }
         }
 
         $this->setTemplateView(self::TEMPLATE, array(
