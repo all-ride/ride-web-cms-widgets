@@ -1,8 +1,8 @@
 <?php
 
-namespace pallo\web\cms\controller\widget;
+namespace ride\web\cms\controller\widget;
 
-use pallo\library\i18n\I18n;
+use ride\library\i18n\I18n;
 
 /**
  * Widget to change the current locale

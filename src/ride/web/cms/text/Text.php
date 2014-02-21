@@ -1,6 +1,6 @@
 <?php
 
-namespace pallo\web\cms\text;
+namespace ride\web\cms\text;
 
 /**
  * Interface for text data container

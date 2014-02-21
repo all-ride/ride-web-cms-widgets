@@ -1,10 +1,10 @@
 <?php
 
-namespace pallo\web\cms\controller\widget;
+namespace ride\web\cms\controller\widget;
 
-use pallo\library\i18n\I18n;
-use pallo\library\validation\exception\ValidationException;
-use pallo\library\String;
+use ride\library\i18n\I18n;
+use ride\library\validation\exception\ValidationException;
+use ride\library\String;
 
 /**
  * Widget to show a static text block
@@ -99,7 +99,7 @@ class TextWidget extends AbstractWidget {
      */
     protected function getText() {
         $text = $this->getTextIO()->getText($this->properties, $this->locale);
-        $format = $this->dependencyInjector->get('pallo\\web\\cms\\text\\format\\TextFormat', $text->getFormat());
+        $format = $this->dependencyInjector->get('ride\\web\\cms\\text\\format\\TextFormat', $text->getFormat());
 
         return $format->getHtml($text->getText());
     }
@@ -115,7 +115,7 @@ class TextWidget extends AbstractWidget {
 
     /**
      * Action to handle and show the properties of this widget
-     * @param pallo\library\i18n\I18n $i18n
+     * @param ride\library\i18n\I18n $i18n
      * @return null
      */
     public function propertiesAction(I18n $i18n) {
@@ -123,14 +123,14 @@ class TextWidget extends AbstractWidget {
 
         // generate the options
         $formatOptions = array();
-        $formats = $this->dependencyInjector->getAll('pallo\\web\\cms\\text\\format\\TextFormat');
+        $formats = $this->dependencyInjector->getAll('ride\\web\\cms\\text\\format\\TextFormat');
         foreach ($formats as $name => $null) {
             $formatOptions[$name] = $translator->translate('text.format.' . $name);
         }
         asort($formatOptions);
 
         $ioOptions = array();
-        $ios = $this->dependencyInjector->getAll('pallo\\web\\cms\\text\\io\\TextIO');
+        $ios = $this->dependencyInjector->getAll('ride\\web\\cms\\text\\io\\TextIO');
         foreach ($ios as $name => $null) {
             $ioOptions[$name] = $translator->translate('text.io.' . $name);
         }
@@ -157,7 +157,7 @@ class TextWidget extends AbstractWidget {
             $data[self::PROPERTY_FORMAT] = $this->request->getBodyParameter(self::PROPERTY_FORMAT, $data[self::PROPERTY_FORMAT]);
         }
 
-        $textFormat = $this->dependencyInjector->get('pallo\\web\\cms\\text\\format\\TextFormat', $data[self::PROPERTY_FORMAT]);
+        $textFormat = $this->dependencyInjector->get('ride\\web\\cms\\text\\format\\TextFormat', $data[self::PROPERTY_FORMAT]);
         $textIo = $this->getTextIO();
 
         // create the form
@@ -196,7 +196,7 @@ class TextWidget extends AbstractWidget {
 
                     $this->properties->setWidgetProperty(self::PROPERTY_IO, $data['io']);
 
-                    $textFormat = $this->dependencyInjector->get('pallo\\web\\cms\\text\\format\\TextFormat', $data[self::PROPERTY_FORMAT]);
+                    $textFormat = $this->dependencyInjector->get('ride\\web\\cms\\text\\format\\TextFormat', $data[self::PROPERTY_FORMAT]);
                     $textIo = $this->getTextIO();
 
                     $text->setFormat($data[self::PROPERTY_FORMAT]);
@@ -242,7 +242,7 @@ class TextWidget extends AbstractWidget {
             $io = null;
         }
 
-        return $this->dependencyInjector->get('pallo\\web\\cms\\text\\io\\TextIO', $io);
+        return $this->dependencyInjector->get('ride\\web\\cms\\text\\io\\TextIO', $io);
     }
 
 
