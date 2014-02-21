@@ -1,12 +1,12 @@
 <?php
 
-namespace pallo\web\cms\text\format;
+namespace ride\web\cms\text\format;
 
-use pallo\library\form\FormBuilder;
-use pallo\library\i18n\translator\Translator;
+use ride\library\form\FormBuilder;
+use ride\library\i18n\translator\Translator;
 
-use pallo\web\cms\controller\widget\TextWidget;
-use pallo\web\cms\text\Text;
+use ride\web\cms\controller\widget\TextWidget;
+use ride\web\cms\text\Text;
 
 /**
  * Plain HTML text format
@@ -24,9 +24,9 @@ class HtmlTextFormat implements TextFormat {
 
     /**
      * Processes the properties form to update the editor for this format
-     * @param pallo\library\form\FormBuilder $formBuilder Form builder for the
+     * @param ride\library\form\FormBuilder $formBuilder Form builder for the
      * text properties
-     * @param pallo\library\i18n\translator\Translator $translator Instance of
+     * @param ride\library\i18n\translator\Translator $translator Instance of
      * the translator
      * @param string $locale Current locale
      * @return null
@@ -49,7 +49,7 @@ class HtmlTextFormat implements TextFormat {
 
     /**
      * Updates the text with the submitted data
-     * @param pallo\web\cms\text\Text $text Text to update
+     * @param ride\web\cms\text\Text $text Text to update
      * @param array $data Submitted data
      * @return null
      */

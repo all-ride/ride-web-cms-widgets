@@ -1,9 +1,9 @@
 <?php
 
-namespace pallo\web\cms\controller\widget;
+namespace ride\web\cms\controller\widget;
 
-use pallo\library\cms\node\Node;
-use pallo\library\cms\node\NodeModel;
+use ride\library\cms\node\Node;
+use ride\library\cms\node\NodeModel;
 
 /**
  * Widget to show a menu of the node tree or a part thereof
@@ -136,7 +136,7 @@ class MenuWidget extends AbstractWidget {
         $cssClass = $this->getCssClass();
 
         if ($parent) {
-            $nodeModel = $this->dependencyInjector->get('pallo\\library\\cms\\node\\NodeModel');
+            $nodeModel = $this->dependencyInjector->get('ride\\library\\cms\\node\\NodeModel');
             $parentNode = $nodeModel->getNode($parent);
             $parent = $parentNode->getName($this->locale);
         } else {

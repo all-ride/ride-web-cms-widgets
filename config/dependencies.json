@@ -1,38 +1,38 @@
 {
     "dependencies": [
         {
-            "interfaces": "pallo\\web\\cms\\text\\format\\TextFormat",
-            "class": "pallo\\web\\cms\\text\\format\\HtmlTextFormat",
+            "interfaces": "ride\\web\\cms\\text\\format\\TextFormat",
+            "class": "ride\\web\\cms\\text\\format\\HtmlTextFormat",
             "id": "html"
         },
         {
-            "interfaces": "pallo\\web\\cms\\text\\io\\TextIO",
-            "class": "pallo\\web\\cms\\text\\io\\PropertiesTextIO",
+            "interfaces": "ride\\web\\cms\\text\\io\\TextIO",
+            "class": "ride\\web\\cms\\text\\io\\PropertiesTextIO",
             "id": "properties"
         },        
         {
-            "interfaces": "pallo\\library\\cms\\widget\\Widget",
-            "class": "pallo\\web\\cms\\controller\\widget\\BreadcrumbsWidget",
+            "interfaces": "ride\\library\\cms\\widget\\Widget",
+            "class": "ride\\web\\cms\\controller\\widget\\BreadcrumbsWidget",
             "id": "breadcrumbs"
         },
         {
-            "interfaces": "pallo\\library\\cms\\widget\\Widget",
-            "class": "pallo\\web\\cms\\controller\\widget\\LanguageSelectWidget",
+            "interfaces": "ride\\library\\cms\\widget\\Widget",
+            "class": "ride\\web\\cms\\controller\\widget\\LanguageSelectWidget",
             "id": "language.select"
         },
         {
-            "interfaces": "pallo\\library\\cms\\widget\\Widget",
-            "class": "pallo\\web\\cms\\controller\\widget\\MenuWidget",
+            "interfaces": "ride\\library\\cms\\widget\\Widget",
+            "class": "ride\\web\\cms\\controller\\widget\\MenuWidget",
             "id": "menu"
         },
         {
-            "interfaces": "pallo\\library\\cms\\widget\\Widget",
-            "class": "pallo\\web\\cms\\controller\\widget\\TextWidget",
+            "interfaces": "ride\\library\\cms\\widget\\Widget",
+            "class": "ride\\web\\cms\\controller\\widget\\TextWidget",
             "id": "text"
         },        
         {
-            "interfaces": "pallo\\library\\cms\\widget\\Widget",
-            "class": "pallo\\web\\cms\\controller\\widget\\TitleWidget",
+            "interfaces": "ride\\library\\cms\\widget\\Widget",
+            "class": "ride\\web\\cms\\controller\\widget\\TitleWidget",
             "id": "title"
         }
     ]

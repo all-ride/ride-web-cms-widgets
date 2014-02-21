@@ -1,9 +1,9 @@
 <?php
 
-namespace pallo\web\cms\controller\widget;
+namespace ride\web\cms\controller\widget;
 
-use pallo\library\cms\node\Node;
-use pallo\library\cms\node\NodeModel;
+use ride\library\cms\node\Node;
+use ride\library\cms\node\NodeModel;
 
 /**
  * Widget to show the breadcrums of the current page

@@ -1,6 +1,6 @@
 {
-    "name": "pallo/web-cms-widgets",
-    "description": "Base widget for the CMS application of the Pallo framework",
+    "name": "ride/web-cms-widgets",
+    "description": "Base widget for the CMS application of the Ride framework",
     "license": "MIT",
     "version": "0.1.7",
     "authors": [
@@ -10,18 +10,18 @@
         }
     ],
     "require": {
-        "pallo/lib-cms": ">=0.5.0",
-        "pallo/lib-common": ">=0.4.0",
-        "pallo/lib-form": ">=0.3.0",
-        "pallo/lib-i18n": ">=0.1.0",
-        "pallo/lib-validation": ">=0.1.0",
-        "pallo/lib-widget": ">=0.1.1",
-        "pallo/web-cms": ">=0.5.0"
+        "ride/lib-cms": ">=0.5.0",
+        "ride/lib-common": ">=0.4.0",
+        "ride/lib-form": ">=0.3.0",
+        "ride/lib-i18n": ">=0.1.0",
+        "ride/lib-validation": ">=0.1.0",
+        "ride/lib-widget": ">=0.1.1",
+        "ride/web-cms": ">=0.5.0"
     }, 
     "autoload": {
         "psr-0": {
-            "pallo\\web\\cms\\controller\\widget\\": ["src/"],
-            "pallo\\web\\cms\\text\\": ["src/"]
+            "ride\\web\\cms\\controller\\widget\\": ["src/"],
+            "ride\\web\\cms\\text\\": ["src/"]
         }
     }
 }

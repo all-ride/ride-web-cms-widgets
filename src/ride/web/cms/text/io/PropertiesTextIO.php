@@ -1,14 +1,14 @@
 <?php
 
-namespace pallo\web\cms\text\io;
+namespace ride\web\cms\text\io;
 
-use pallo\library\form\FormBuilder;
-use pallo\library\i18n\translator\Translator;
-use pallo\library\widget\WidgetProperties;
+use ride\library\form\FormBuilder;
+use ride\library\i18n\translator\Translator;
+use ride\library\widget\WidgetProperties;
 
-use pallo\web\cms\controller\widget\TextWidget;
-use pallo\web\cms\text\GenericText;
-use pallo\web\cms\text\Text;
+use ride\web\cms\controller\widget\TextWidget;
+use ride\web\cms\text\GenericText;
+use ride\web\cms\text\Text;
 
 /**
  * Widget properties implementation for input/output of the text widget
@@ -17,12 +17,12 @@ class PropertiesTextIO implements TextIO {
 
     /**
      * Processes the properties form to update the editor for this io
-     * @param pallo\library\form\FormBuilder $formBuilder Form builder for the
+     * @param ride\library\form\FormBuilder $formBuilder Form builder for the
      * text properties
-     * @param pallo\library\i18n\translator\Translator $translator Instance of
+     * @param ride\library\i18n\translator\Translator $translator Instance of
      * the translator
      * @param string $locale Current locale
-     * @param pallo\web\cms\text\Text $text
+     * @param ride\web\cms\text\Text $text
      * @return null
      */
     public function processForm(FormBuilder $formBuilder, Translator $translator, $locale, Text $text) {
@@ -31,10 +31,10 @@ class PropertiesTextIO implements TextIO {
 
     /**
      * Stores the text in the data source
-     * @param pallo\library\widget\WidgetProperties $widgetProperties Instance
+     * @param ride\library\widget\WidgetProperties $widgetProperties Instance
      * of the widget properties
      * @param string|array $locale Code of the current locale
-     * @param pallo\web\cms\text\Text $text Instance of the text
+     * @param ride\web\cms\text\Text $text Instance of the text
      * @param array $data Submitted data
      * @return null
      */
@@ -51,10 +51,10 @@ class PropertiesTextIO implements TextIO {
 
     /**
      * Gets the text from the data source
-     * @param pallo\library\widget\WidgetProperties $widgetProperties Instance
+     * @param ride\library\widget\WidgetProperties $widgetProperties Instance
      * of the widget properties
      * @param string $locale Code of the current locale
-     * @return pallo\web\cms\text\Text Instance of the text
+     * @return ride\web\cms\text\Text Instance of the text
      */
     public function getText(WidgetProperties $widgetProperties, $locale) {
         $text = new GenericText();

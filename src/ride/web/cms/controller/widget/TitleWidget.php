@@ -1,6 +1,6 @@
 <?php
 
-namespace pallo\web\cms\controller\widget;
+namespace ride\web\cms\controller\widget;
 
 /**
  * Widget to show the name of the current node as title
