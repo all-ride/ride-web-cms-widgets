@@ -115,7 +115,7 @@ class TextWidget extends AbstractWidget {
 
     /**
      * Action to handle and show the properties of this widget
-     * @param ride\library\i18n\I18n $i18n
+     * @param \ride\library\i18n\I18n $i18n
      * @return null
      */
     public function propertiesAction(I18n $i18n) {
@@ -232,7 +232,7 @@ class TextWidget extends AbstractWidget {
 
     /**
      * Gets the text IO
-     * @return joppa\model\text\io\TextIO
+     * @return \ride\web\cms\text\io\TextIO;
      */
     protected function getTextIO() {
         $io = $this->getDefaultTextIO();

@@ -2,8 +2,6 @@
 
 namespace ride\web\cms\controller\widget;
 
-use ride\library\cms\node\Node;
-use ride\library\cms\node\NodeModel;
 
 /**
  * Widget to show the breadcrums of the current page
