@@ -24,9 +24,9 @@ class HtmlTextFormat implements TextFormat {
 
     /**
      * Processes the properties form to update the editor for this format
-     * @param ride\library\form\FormBuilder $formBuilder Form builder for the
+     * @param \ride\library\form\FormBuilder $formBuilder Form builder for the
      * text properties
-     * @param ride\library\i18n\translator\Translator $translator Instance of
+     * @param \ride\library\i18n\translator\Translator $translator Instance of
      * the translator
      * @param string $locale Current locale
      * @return null
@@ -49,7 +49,7 @@ class HtmlTextFormat implements TextFormat {
 
     /**
      * Updates the text with the submitted data
-     * @param ride\web\cms\text\Text $text Text to update
+     * @param \ride\web\cms\text\Text $text Text to update
      * @param array $data Submitted data
      * @return null
      */
