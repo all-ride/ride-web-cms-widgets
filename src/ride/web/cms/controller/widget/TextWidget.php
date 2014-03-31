@@ -9,7 +9,7 @@ use ride\library\String;
 /**
  * Widget to show a static text block
  */
-class TextWidget extends AbstractWidget {
+class TextWidget extends AbstractWidget implements StyleWidget {
 
 	/**
 	 * Machine name of this widget
@@ -260,6 +260,17 @@ class TextWidget extends AbstractWidget {
      */
     protected function getDefaultTextIO() {
         return $this->config->get(self::PARAM_DEFAULT_IO, 'properties');
+    }
+
+    /**
+     * Gets the options for the styles
+     * @return array Array with the name of the option as key and the
+     * translation key as value
+     */
+    public function getWidgetStyleOptions() {
+        return array(
+            'text' => 'label.widget.style.text',
+        );
     }
 
 }
