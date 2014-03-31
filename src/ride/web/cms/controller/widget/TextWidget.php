@@ -9,7 +9,7 @@ use ride\library\String;
 /**
  * Widget to show a static text block
  */
-class TextWidget extends AbstractWidget {
+class TextWidget extends AbstractWidget implements StyleWidget {
 
 	/**
 	 * Machine name of this widget
@@ -115,7 +115,7 @@ class TextWidget extends AbstractWidget {
 
     /**
      * Action to handle and show the properties of this widget
-     * @param ride\library\i18n\I18n $i18n
+     * @param \ride\library\i18n\I18n $i18n
      * @return null
      */
     public function propertiesAction(I18n $i18n) {
@@ -232,7 +232,7 @@ class TextWidget extends AbstractWidget {
 
     /**
      * Gets the text IO
-     * @return joppa\model\text\io\TextIO
+     * @return \ride\web\cms\text\io\TextIO;
      */
     protected function getTextIO() {
         $io = $this->getDefaultTextIO();
@@ -260,6 +260,17 @@ class TextWidget extends AbstractWidget {
      */
     protected function getDefaultTextIO() {
         return $this->config->get(self::PARAM_DEFAULT_IO, 'properties');
+    }
+
+    /**
+     * Gets the options for the styles
+     * @return array Array with the name of the option as key and the
+     * translation key as value
+     */
+    public function getWidgetStyleOptions() {
+        return array(
+            'text' => 'label.widget.style.text',
+        );
     }
 
 }
