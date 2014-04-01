@@ -269,7 +269,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
      */
     public function getWidgetStyleOptions() {
         return array(
-            'text' => 'label.widget.style.text',
+            'container' => 'label.widget.style.container',
         );
     }
 
