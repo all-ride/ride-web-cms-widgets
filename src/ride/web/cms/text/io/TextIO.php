@@ -14,6 +14,12 @@ use ride\web\cms\text\Text;
 interface TextIO {
 
     /**
+     * Gets the machine name of this IO
+     * @return string
+     */
+    public function getName();
+
+    /**
      * Processes the properties form to update the editor for this io
      * @param \ride\library\form\FormBuilder $formBuilder Form builder for the
      * text properties
