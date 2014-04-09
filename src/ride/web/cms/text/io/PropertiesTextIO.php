@@ -2,7 +2,6 @@
 
 namespace ride\web\cms\text\io;
 
-use ride\library\form\FormBuilder;
 use ride\library\i18n\translator\Translator;
 use ride\library\widget\WidgetProperties;
 
@@ -13,39 +12,31 @@ use ride\web\cms\text\Text;
 /**
  * Widget properties implementation for input/output of the text widget
  */
-class PropertiesTextIO implements TextIO {
+class PropertiesTextIO extends AbstractTextIO {
 
     /**
-     * Processes the properties form to update the editor for this io
-     * @param \ride\library\form\FormBuilder $formBuilder Form builder for the
-     * text properties
-     * @param \ride\library\i18n\translator\Translator $translator Instance of
-     * the translator
-     * @param string $locale Current locale
-     * @param \ride\web\cms\text\Text $text
-     * @return null
+     * Machine name of this IO
+     * @var string
      */
-    public function processForm(FormBuilder $formBuilder, Translator $translator, $locale, Text $text) {
-
-    }
+    const NAME = 'properties';
 
     /**
      * Stores the text in the data source
      * @param \ride\library\widget\WidgetProperties $widgetProperties Instance
      * of the widget properties
-     * @param string|array $locale Code of the current locale
+     * @param string|array $locales Code of the current locale
      * @param \ride\web\cms\text\Text $text Instance of the text
      * @param array $data Submitted data
      * @return null
      */
-    public function setText(WidgetProperties $widgetProperties, $locale, Text $text, array $data) {
-        if (!is_array($locale)) {
-            $locale = array($locale);
+    public function setText(WidgetProperties $widgetProperties, $locales, Text $text, array $data) {
+        if (!is_array($locales)) {
+            $locales = array($locales);
         }
 
-        foreach ($locale as $l) {
-            $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_FORMAT . '.' . $l, $text->getFormat());
-            $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_TEXT . '.' . $l, $text->getText());
+        foreach ($locales as $locale) {
+            $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_FORMAT . '.' . $locale, $text->getFormat());
+            $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_TEXT . '.' . $locale, $text->getText());
         }
     }
 

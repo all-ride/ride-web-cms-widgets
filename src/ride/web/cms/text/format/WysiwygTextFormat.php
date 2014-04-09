@@ -6,21 +6,17 @@ use ride\library\form\FormBuilder;
 use ride\library\i18n\translator\Translator;
 
 use ride\web\cms\controller\widget\TextWidget;
-use ride\web\cms\text\Text;
 
 /**
- * Plain HTML text format
+ * Wysiwyg text format
  */
-class HtmlTextFormat implements TextFormat {
+class WysiwygTextFormat extends AbstractTextFormat {
 
     /**
-     * Gets the HTML of the provided text
-     * @param string $text Text as edited by the user
-     * @return string HTML version of the text
+     * Machine name of this text format
+     * @var string
      */
-    public function getHtml($text) {
-        return $text;
-    }
+    const NAME = 'wysiwyg';
 
     /**
      * Processes the properties form to update the editor for this format
@@ -32,10 +28,9 @@ class HtmlTextFormat implements TextFormat {
      * @return null
      */
     public function processForm(FormBuilder $formBuilder, Translator $translator, $locale) {
-        $formBuilder->addRow(TextWidget::PROPERTY_TEXT, 'text', array(
-            'label' => $translator->translate('label.html'),
+        $formBuilder->addRow(TextWidget::PROPERTY_TEXT, 'wysiwyg', array(
+            'label' => $translator->translate('label.text'),
             'attributes' => array(
-                'class' => 'html',
                 'rows' => '12',
             ),
             'filters' => array(
@@ -45,22 +40,6 @@ class HtmlTextFormat implements TextFormat {
                 'required' => array(),
             )
         ));
-    }
-
-    /**
-     * Updates the text with the submitted data
-     * @param \ride\web\cms\text\Text $text Text to update
-     * @param array $data Submitted data
-     * @return null
-     */
-    public function setText(Text $text, array $data) {
-        if (isset($data[TextWidget::PROPERTY_TEXT])) {
-            $data = $data[TextWidget::PROPERTY_TEXT];
-        } else {
-            $data = '';
-        }
-
-        $text->setText($data);
     }
 
 }
