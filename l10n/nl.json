@@ -1,0 +1,11 @@
+{
+    "label.email": "E-mailadres",
+    "label.message": "Boodschap",
+    "label.name": "Naam",
+    "label.node.finish": "Bevestiging",
+    "label.node.finish.description": "Selecteer de node van de bevestigingspagina",
+    "label.recipient": "Ontvanger",
+    "label.subject": "Onderwerp",
+    "success.contact.message.sent": "Bedankt, je boodschap werd verzonden.",
+    "widget.contact": "Contactformulier"
+}
