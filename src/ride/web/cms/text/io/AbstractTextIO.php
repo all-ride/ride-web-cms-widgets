@@ -4,6 +4,7 @@ namespace ride\web\cms\text\io;
 
 use ride\library\form\FormBuilder;
 use ride\library\i18n\translator\Translator;
+use ride\library\widget\WidgetProperties;
 
 use ride\web\cms\text\Text;
 
@@ -21,16 +22,18 @@ abstract class AbstractTextIO implements TextIO {
     }
 
     /**
-     * Processes the properties form to update the editor for this io
-     * @param \ride\library\form\FormBuilder $formBuilder Form builder for the
-     * text properties
+     * Processes the properties form to update the editor for this IO
+     * @param \ride\library\widget\WidgetProperties $widgetProperties Instance
+     * of the widget properties
+     * @param string $locale Current locale
      * @param \ride\library\i18n\translator\Translator $translator Instance of
      * the translator
-     * @param string $locale Current locale
-     * @param \ride\web\cms\text\Text $text
+     * @param \ride\web\cms\text\Text $text Instance of the text
+     * @param \ride\library\form\FormBuilder $formBuilder Form builder for the
+     * text properties
      * @return null
      */
-    public function processForm(FormBuilder $formBuilder, Translator $translator, $locale, Text $text) {
+    public function processForm(WidgetProperties $widgetProperties, $locale, Translator $translator, Text $text, FormBuilder $formBuilder) {
 
     }
 
