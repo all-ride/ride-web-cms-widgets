@@ -2,7 +2,6 @@
 
 namespace ride\web\cms\text\io;
 
-use ride\library\i18n\translator\Translator;
 use ride\library\widget\WidgetProperties;
 
 use ride\web\cms\controller\widget\TextWidget;

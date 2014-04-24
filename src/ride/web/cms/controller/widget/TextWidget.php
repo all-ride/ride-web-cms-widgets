@@ -121,7 +121,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         $form->setId('form-text');
 
         $format->processForm($form, $translator, $this->locale);
-        $io->processForm($form, $translator, $this->locale, $text);
+        $io->processForm($this->properties, $this->locale, $translator, $text, $form);
 
         if ($hasMultipleLocales) {
             $form->addRow('locales-all', 'option', array(
@@ -161,6 +161,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
             'format' => $format,
             'text' => $text,
         ));
+        $view->addJavascript('js/cms/text.js');
 
         $form->processView($view);
 
