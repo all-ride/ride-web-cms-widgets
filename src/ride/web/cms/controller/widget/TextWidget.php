@@ -4,7 +4,7 @@ namespace ride\web\cms\controller\widget;
 
 use ride\library\i18n\I18n;
 use ride\library\validation\exception\ValidationException;
-use ride\library\String;
+use ride\library\StringHelper;
 
 /**
  * Widget to show a static text block
@@ -86,8 +86,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         if (!$previewStripped) {
             $preview = htmlentities($preview);
         } else {
-            $preview = new String($previewStripped);
-            $preview = $preview->truncate(120);
+            $preview = StringHelper::truncate($previewStripped, 120);
         }
 
         return $preview;
