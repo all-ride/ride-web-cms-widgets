@@ -1,0 +1,11 @@
+{
+    "label.email": "Email address",
+    "label.message": "Message",
+    "label.name": "Name",
+    "label.node.finish": "Finish",
+    "label.node.finish.description": "Select the node of the finish page",
+    "label.recipient": "Recipient",
+    "label.subject": "Subject",
+    "success.contact.message.sent": "Thank you, your message has been sent.",
+    "widget.contact": "Contact Form"
+}

@@ -13,6 +13,12 @@ use ride\web\cms\text\Text;
 interface TextFormat {
 
     /**
+     * Gets the machine name of this format
+     * @return string
+     */
+    public function getName();
+
+    /**
      * Gets the HTML of the provided text
      * @param string $text Text as edited by the user
      * @return string HTML version of the text

@@ -2,18 +2,28 @@
     "dependencies": [
         {
             "interfaces": "ride\\web\\cms\\text\\format\\TextFormat",
-            "class": "ride\\web\\cms\\text\\format\\HtmlTextFormat",
-            "id": "html"
+            "class": "ride\\web\\cms\\text\\format\\PlainTextFormat",
+            "id": "plain"
+        },
+        {
+            "interfaces": "ride\\web\\cms\\text\\format\\TextFormat",
+            "class": "ride\\web\\cms\\text\\format\\WysiwygTextFormat",
+            "id": "wysiwyg"
         },
         {
             "interfaces": "ride\\web\\cms\\text\\io\\TextIO",
             "class": "ride\\web\\cms\\text\\io\\PropertiesTextIO",
             "id": "properties"
-        },        
+        },
         {
             "interfaces": "ride\\library\\cms\\widget\\Widget",
             "class": "ride\\web\\cms\\controller\\widget\\BreadcrumbsWidget",
             "id": "breadcrumbs"
+        },
+        {
+            "interfaces": "ride\\library\\cms\\widget\\Widget",
+            "class": "ride\\web\\cms\\controller\\widget\\ContactWidget",
+            "id": "contact"
         },
         {
             "interfaces": "ride\\library\\cms\\widget\\Widget",
@@ -29,7 +39,7 @@
             "interfaces": "ride\\library\\cms\\widget\\Widget",
             "class": "ride\\web\\cms\\controller\\widget\\TextWidget",
             "id": "text"
-        },        
+        },
         {
             "interfaces": "ride\\library\\cms\\widget\\Widget",
             "class": "ride\\web\\cms\\controller\\widget\\TitleWidget",

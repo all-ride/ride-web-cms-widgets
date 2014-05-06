@@ -4,7 +4,7 @@ namespace ride\web\cms\controller\widget;
 
 use ride\library\i18n\I18n;
 use ride\library\validation\exception\ValidationException;
-use ride\library\String;
+use ride\library\StringHelper;
 
 /**
  * Widget to show a static text block
@@ -86,31 +86,10 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         if (!$previewStripped) {
             $preview = htmlentities($preview);
         } else {
-            $preview = new String($previewStripped);
-            $preview = $preview->truncate(120);
+            $preview = StringHelper::truncate($previewStripped, 120);
         }
 
         return $preview;
-    }
-
-    /**
-     * Gets the text to display
-     * @return string
-     */
-    protected function getText() {
-        $text = $this->getTextIO()->getText($this->properties, $this->locale);
-        $format = $this->dependencyInjector->get('ride\\web\\cms\\text\\format\\TextFormat', $text->getFormat());
-
-        return $format->getHtml($text->getText());
-    }
-
-    /**
-     * Gets the callback for the properties action
-     * @return null|callback Null if the widget does not implement a properties
-     * action, a callback for the action otherwise
-     */
-    public function getPropertiesCallback() {
-        return array($this, 'propertiesAction');
     }
 
     /**
@@ -119,115 +98,90 @@ class TextWidget extends AbstractWidget implements StyleWidget {
      * @return null
      */
     public function propertiesAction(I18n $i18n) {
-        $translator = $this->getTranslator();
-
-        // generate the options
-        $formatOptions = array();
-        $formats = $this->dependencyInjector->getAll('ride\\web\\cms\\text\\format\\TextFormat');
-        foreach ($formats as $name => $null) {
-            $formatOptions[$name] = $translator->translate('text.format.' . $name);
-        }
-        asort($formatOptions);
-
-        $ioOptions = array();
-        $ios = $this->dependencyInjector->getAll('ride\\web\\cms\\text\\io\\TextIO');
-        foreach ($ios as $name => $null) {
-            $ioOptions[$name] = $translator->translate('text.io.' . $name);
-        }
-        asort($ioOptions);
+        $locales = $i18n->getLocaleCodeList();
+        $hasMultipleLocales = count($locales) != 1;
 
         // get the data
-        $text = $this->getTextIO()->getText($this->properties, $this->locale);
-        $io = $this->properties->getWidgetProperty(self::PROPERTY_IO);
-
+        $io = $this->getTextIO();
+        $text = $io->getText($this->properties, $this->locale);
         if (!$text->getFormat()) {
             $text->setFormat($this->getDefaultTextFormat());
         }
-        if (!$io) {
-            $io = $this->getDefaultTextIO();
-        }
+        $format = $this->getTextFormat($text->getFormat());
 
         $data = array(
-            self::PROPERTY_FORMAT => $text->getFormat(),
             self::PROPERTY_TEXT => $text->getText(),
-            self::PROPERTY_IO => $io,
         );
 
-        if ($this->request->isPost()) {
-            $data[self::PROPERTY_FORMAT] = $this->request->getBodyParameter(self::PROPERTY_FORMAT, $data[self::PROPERTY_FORMAT]);
-        }
-
-        $textFormat = $this->dependencyInjector->get('ride\\web\\cms\\text\\format\\TextFormat', $data[self::PROPERTY_FORMAT]);
-        $textIo = $this->getTextIO();
-
         // create the form
+        $translator = $this->getTranslator();
+
         $form = $this->createFormBuilder($data);
         $form->setId('form-text');
-        $form->addRow(self::PROPERTY_FORMAT, 'select', array(
-            'label' => $translator->translate('label.text.format'),
-            'options' => $formatOptions,
-        ));
 
-        $textFormat->processForm($form, $translator, $this->locale);
-        $textIo->processForm($form, $translator, $this->locale, $text);
+        $format->processForm($form, $translator, $this->locale);
+        $io->processForm($this->properties, $this->locale, $translator, $text, $form);
 
-        $form->addRow(self::PROPERTY_IO, 'select', array(
-            'label' => $translator->translate('label.text.io'),
-            'options' => $ioOptions,
-        ));
-        $form->addRow('locales-all', 'option', array(
-            'label' => '',
-            'description' => $translator->translate('label.text.locales.all'),
-        ));
-        $form->setRequest($this->request);
+        if ($hasMultipleLocales) {
+            $form->addRow('locales-all', 'option', array(
+                'label' => '',
+                'description' => $translator->translate('label.text.locales.all'),
+            ));
+        }
 
         // handle form submission
         $form = $form->build();
         if ($form->isSubmitted()) {
-            if ($this->request->getBodyParameter('cancel')) {
-                return false;
-            }
+            try {
+                $form->validate();
 
-            if ($this->request->getBodyParameter('action')) {
-                try {
-                    $form->validate();
+                $data = $form->getData();
 
-                    $data = $form->getData();
+                $this->properties->setWidgetProperty(self::PROPERTY_IO, $io->getName());
 
-                    $this->properties->setWidgetProperty(self::PROPERTY_IO, $data['io']);
+                $format->setText($text, $data);
 
-                    $textFormat = $this->dependencyInjector->get('ride\\web\\cms\\text\\format\\TextFormat', $data[self::PROPERTY_FORMAT]);
-                    $textIo = $this->getTextIO();
-
-                    $text->setFormat($data[self::PROPERTY_FORMAT]);
-                    $textFormat->setText($text, $data);
-
-                    if ($data['locales-all']) {
-                        // take all locales, not only the locales of the node
-                        // so when a locale gets enabled in the future, it
-                        // holds the required text
-                        $locales = $i18n->getLocaleCodeList();
-
-                        $textIo->setText($this->properties, $locales, $text, $data);
-                    } else {
-                        $textIo->setText($this->properties, $this->locale, $text, $data);
-                    }
-
-                    return true;
-                } catch (ValidationException $e) {
-                    $this->addError('error.validation');
-
-                    $form->setValidationException($e);
+                if ($hasMultipleLocales && $data['locales-all']) {
+                    $io->setText($this->properties, $locales, $text, $data);
+                } else {
+                    $io->setText($this->properties, $this->locale, $text, $data);
                 }
+
+                return true;
+            } catch (ValidationException $exception) {
+                $this->setValidationException($exception, $form);
             }
         }
 
         // set view
-        $this->setTemplateView('cms/widget/text/properties', array(
+        $view = $this->setTemplateView('cms/widget/text/properties', array(
             'form' => $form->getView(),
+            'io' => $io,
+            'format' => $format,
+            'text' => $text,
         ));
+        $view->addJavascript('js/cms/text.js');
+
+        $form->processView($view);
 
         return false;
+    }
+
+    /**
+     * Gets the instance of the text format
+     * @param string $format Machine name of the text format
+     * @return \ride\web\cms\text\format\TextFormat
+     */
+    protected function getTextFormat($format = null) {
+        return $this->dependencyInjector->get('ride\\web\\cms\\text\\format\\TextFormat', $format);
+    }
+
+    /**
+     * Gets the name of the default text format
+     * @return string Machine name of the text format
+     */
+    protected function getDefaultTextFormat() {
+        return $this->config->get(self::PARAM_DEFAULT_FORMAT, 'plain');
     }
 
     /**
@@ -245,21 +199,23 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         return $this->dependencyInjector->get('ride\\web\\cms\\text\\io\\TextIO', $io);
     }
 
-
-    /**
-     * Gets the name of the default text format
-     * @return string
-     */
-    protected function getDefaultTextFormat() {
-        return $this->config->get(self::PARAM_DEFAULT_FORMAT, 'html');
-    }
-
     /**
      * Gets the name of the default text IO
-     * @return string
+     * @return string Machine name of the text IO
      */
     protected function getDefaultTextIO() {
         return $this->config->get(self::PARAM_DEFAULT_IO, 'properties');
+    }
+
+    /**
+     * Gets the text to display
+     * @return string
+     */
+    protected function getText() {
+        $text = $this->getTextIO()->getText($this->properties, $this->locale);
+        $textFormat = $this->getTextFormat($text->getFormat());
+
+        return $textFormat->getHtml($text->getText());
     }
 
     /**
