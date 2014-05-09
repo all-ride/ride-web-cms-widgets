@@ -6,6 +6,13 @@
     "label.node.finish.description": "Select the node of the finish page",
     "label.recipient": "Recipient",
     "label.subject": "Subject",
+    "label.template": "Template",
     "success.contact.message.sent": "Thank you, your message has been sent.",
-    "widget.contact": "Contact Form"
+    "widget.breadcrumbs": "Breadcrumbs",
+    "widget.contact": "Contact Form",
+    "widget.language.select": "Language Select",
+    "widget.menu": "Menu",
+    "widget.text": "Text",
+    "widget.template": "Template",
+    "widget.title": "Page Title"
 }
