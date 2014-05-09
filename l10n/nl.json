@@ -6,6 +6,13 @@
     "label.node.finish.description": "Selecteer de node van de bevestigingspagina",
     "label.recipient": "Ontvanger",
     "label.subject": "Onderwerp",
+    "label.template": "Template",
     "success.contact.message.sent": "Bedankt, je boodschap werd verzonden.",
-    "widget.contact": "Contactformulier"
+    "widget.breadcrumbs": "Broodkruimels",
+    "widget.contact": "Contactformulier",
+    "widget.language.select": "Taalkeuze",
+    "widget.menu": "Menu",
+    "widget.text": "Tekst",
+    "widget.template": "Template",
+    "widget.title": "Paginatitel"
 }
