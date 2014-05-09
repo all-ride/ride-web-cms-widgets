@@ -32,16 +32,10 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
      * @return null
      */
     public function indexAction(I18n $i18n) {
-        $locales = $i18n->getLocales();
-
-        $node = $this->properties->getNode();
-
-        $baseUrl = $node->getRootNode()->getBaseUrl($this->locale);
-        if (!$baseUrl) {
-            $baseScript = $this->request->getBaseScript();
-        }
-
         $urls = array();
+
+        $locales = $i18n->getLocales();
+        $node = $this->properties->getNode();
 
         $content = $this->getContext('content');
         if (isset($content->type)) {
@@ -49,6 +43,10 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
             $site = $node->getRootNodeId();
         } else {
             $content = null;
+
+            $url = $this->request->getUrl();
+            $routeUrl = $this->getUrl($this->request->getRoute()->getId());
+            $suffix = str_replace($routeUrl, '', $url);
         }
 
         foreach ($locales as $localeCode => $locale) {
@@ -63,7 +61,7 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
                 );
             } else {
                 $urls[$localeCode] = array(
-                    'url' => $baseScript . $node->getRoute($localeCode),
+                    'url' => $node->getUrl($localeCode, $this->request->getBaseScript()) . $suffix,
                     'locale' => $locale,
                 );
             }
