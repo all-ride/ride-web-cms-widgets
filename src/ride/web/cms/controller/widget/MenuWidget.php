@@ -143,15 +143,6 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
     }
 
     /**
-     * Gets the callback for the properties action
-     * @return null|callback Null if the widget does not implement a properties
-     * action, a callback for the action otherwise
-     */
-    public function getPropertiesCallback() {
-        return array($this, 'propertiesAction');
-    }
-
-    /**
      * Action to handle and show the properties of this widget
      * @return null
      */
