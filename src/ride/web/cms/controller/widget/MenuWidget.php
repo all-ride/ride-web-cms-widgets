@@ -204,8 +204,6 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             'description' => $translator->translate('label.menu.title.show.description'),
         ));
 
-        $form->setRequest($this->request);
-
         $form = $form->build();
         if ($form->isSubmitted()) {
             if ($this->request->getBodyParameter('cancel')) {
