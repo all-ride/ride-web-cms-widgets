@@ -148,7 +148,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         $data = array(
             'recipient' => $this->getRecipient(),
             'subject' => $this->getSubject(),
-            'finishNode' => $this->properties->getWidgetProperty('finish.node.' . $this->locale),
+            'finishNode' => $this->properties->getWidgetProperty('finish.node'),
         );
 
         $form = $this->createFormBuilder($data);
@@ -182,7 +182,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
 
                 $this->properties->setWidgetProperty('recipient.' . $this->locale, $data['recipient']);
                 $this->properties->setWidgetProperty('subject.' . $this->locale, $data['subject']);
-                $this->properties->setWidgetProperty('finish.node.' . $this->locale, $data['finishNode']);
+                $this->properties->setWidgetProperty('finish.node', $data['finishNode']);
 
                 return true;
             } catch (ValidationException $e) {
