@@ -45,7 +45,10 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
             $content = null;
 
             $url = $this->request->getUrl();
-            $routeUrl = $this->getUrl($this->request->getRoute()->getId());
+            $routeUrl = $this->getUrl($this->request->getRoute()->getId(), array(
+                'node' => $node->getId(),
+                'locale' => $this->locale,
+            ));
             $suffix = str_replace($routeUrl, '', $url);
         }
 
