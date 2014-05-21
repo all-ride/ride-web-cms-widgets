@@ -34,14 +34,17 @@ abstract class AbstractTextFormat implements TextFormat {
      * @return null
      */
     public function setText(Text $text, array $data) {
-        if (isset($data[TextWidget::PROPERTY_TEXT])) {
-            $data = $data[TextWidget::PROPERTY_TEXT];
-        } else {
-            $data = '';
-        }
+        $format = $this->getName();
+        $title = isset($data[TextWidget::PROPERTY_TITLE]) ? $data[TextWidget::PROPERTY_TITLE] : null;
+        $body = isset($data[TextWidget::PROPERTY_BODY]) ? $data[TextWidget::PROPERTY_BODY] : null;
+        $image = isset($data[TextWidget::PROPERTY_IMAGE]) ? $data[TextWidget::PROPERTY_IMAGE] : null;
+        $imageAlignment = isset($data[TextWidget::PROPERTY_IMAGE_ALIGNMENT]) ? $data[TextWidget::PROPERTY_IMAGE_ALIGNMENT] : null;
 
-        $text->setText($data);
         $text->setFormat($this->getName());
+        $text->setTitle($title);
+        $text->setBody($body);
+        $text->setImage($image);
+        $text->setImageAlignment($imageAlignment);
     }
 
 }

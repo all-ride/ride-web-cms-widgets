@@ -6,6 +6,8 @@ use ride\library\i18n\I18n;
 use ride\library\validation\exception\ValidationException;
 use ride\library\StringHelper;
 
+use \ride\web\cms\text\Text;
+
 /**
  * Widget to show a static text block
  */
@@ -42,16 +44,40 @@ class TextWidget extends AbstractWidget implements StyleWidget {
     const PARAM_DEFAULT_IO = 'cms.text.io';
 
     /**
+     * Name of the text property
+     * @var string
+     */
+    const PROPERTY_TEXT = 'text';
+
+    /**
      * Name of the format property
      * @var string
      */
     const PROPERTY_FORMAT = 'format';
 
     /**
-     * Name of the text property
+     * Name of the title property
      * @var string
      */
-    const PROPERTY_TEXT = 'text';
+    const PROPERTY_TITLE = 'title';
+
+    /**
+     * Name of the body property
+     * @var string
+     */
+    const PROPERTY_BODY = 'body';
+
+    /**
+     * Name of the image property
+     * @var string
+     */
+    const PROPERTY_IMAGE = 'image-src';
+
+    /**
+     * Name of the image alignment property
+     * @var string
+     */
+    const PROPERTY_IMAGE_ALIGNMENT = 'image-align';
 
     /**
      * Name of the I/O property
@@ -64,10 +90,17 @@ class TextWidget extends AbstractWidget implements StyleWidget {
      * @return null
      */
     public function indexAction() {
-        $text = $this->getText();
+        $text = $this->getTextIO()->getText($this->properties, $this->locale);
+        $textFormat = $this->getTextFormat($text->getFormat());
+
+        $html = $textFormat->getHtml($text->getBody());
 
         $this->setTemplateView(self::TEMPLATE, array(
-        	'text' => $text,
+            'text' => $text,
+            'title' => $text->getTitle(),
+            'html' => $html,
+            'image' => $text->getImage(),
+            'imageAlignment' => $text->getImageAlignment(),
         ));
 
         if ($this->properties->isAutoCache()) {
@@ -80,14 +113,27 @@ class TextWidget extends AbstractWidget implements StyleWidget {
      * @return string
      */
     public function getPropertiesPreview() {
-        $preview = $this->getText();
+        $text = $this->getTextIO()->getText($this->properties, $this->locale);
+        $textFormat = $this->getTextFormat($text->getFormat());
 
-        $previewStripped = trim(strip_tags($preview));
-        if (!$previewStripped) {
-            $preview = htmlentities($preview);
+        $title = $text->getTitle();
+        $body = $textFormat->getHtml($text->getBody());
+        $image = $text->getImage();
+
+        $bodyStripped = trim(strip_tags($body));
+        if (!$bodyStripped) {
+            $body = htmlentities($body);
         } else {
-            $preview = StringHelper::truncate($previewStripped, 120);
+            $body = StringHelper::truncate($bodyStripped, 120);
         }
+
+        $preview = '';
+
+        if ($title) {
+            $preview .= '<strong>' . $title . '</strong><br>';
+        }
+
+        $preview .= $body;
 
         return $preview;
     }
@@ -103,14 +149,19 @@ class TextWidget extends AbstractWidget implements StyleWidget {
 
         // get the data
         $io = $this->getTextIO();
+
         $text = $io->getText($this->properties, $this->locale);
         if (!$text->getFormat()) {
             $text->setFormat($this->getDefaultTextFormat());
         }
+
         $format = $this->getTextFormat($text->getFormat());
 
         $data = array(
-            self::PROPERTY_TEXT => $text->getText(),
+            self::PROPERTY_TITLE => $text->getTitle(),
+            self::PROPERTY_BODY => $text->getBody(),
+            self::PROPERTY_IMAGE => $text->getImage(),
+            self::PROPERTY_IMAGE_ALIGNMENT => $text->getImageAlignment(),
         );
 
         // create the form
@@ -118,9 +169,26 @@ class TextWidget extends AbstractWidget implements StyleWidget {
 
         $form = $this->createFormBuilder($data);
         $form->setId('form-text');
+        $form->addRow(self::PROPERTY_TITLE, 'string', array(
+            'label' => $translator->translate('label.title'),
+            'filters' => array(
+                'trim' => array(),
+            ),
+        ));
 
         $format->processForm($form, $translator, $this->locale);
         $io->processForm($this->properties, $this->locale, $translator, $text, $form);
+
+        $form->addRow(self::PROPERTY_IMAGE, 'image', array(
+            'label' => $translator->translate('label.image'),
+        ));
+        $form->addRow(self::PROPERTY_IMAGE_ALIGNMENT, 'select', array(
+            'label' => $translator->translate('label.alignment.image'),
+            'options' => array(
+                Text::ALIGN_LEFT => $translator->translate('align.left'),
+                Text::ALIGN_RIGHT => $translator->translate('align.right'),
+            ),
+        ));
 
         if ($hasMultipleLocales) {
             $form->addRow('locales-all', 'option', array(
@@ -215,7 +283,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         $text = $this->getTextIO()->getText($this->properties, $this->locale);
         $textFormat = $this->getTextFormat($text->getFormat());
 
-        return $textFormat->getHtml($text->getText());
+        return $textFormat->getHtml($text->getBody());
     }
 
     /**
@@ -226,6 +294,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
     public function getWidgetStyleOptions() {
         return array(
             'container' => 'label.widget.style.container',
+            'title' => 'label.widget.style.title',
         );
     }
 

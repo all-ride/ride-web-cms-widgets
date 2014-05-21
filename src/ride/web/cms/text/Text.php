@@ -8,6 +8,18 @@ namespace ride\web\cms\text;
 interface Text {
 
     /**
+     * Left alignment
+     * @var string
+     */
+    const ALIGN_LEFT = 'left';
+
+    /**
+     * Right alignment
+     * @var string
+     */
+    const ALIGN_RIGHT = 'right';
+
+    /**
      * Sets the name of the format
      * @param string $format Name of the format
      * @return null
@@ -21,16 +33,55 @@ interface Text {
     public function getFormat();
 
     /**
-     * Sets the text
-     * @param string $text
+     * Sets the title
+     * @param string $title
      * @return null
      */
-    public function setText($text);
+    public function setTitle($title);
 
     /**
-     * Gets the text
+     * Gets the title
      * @return string
      */
-    public function getText();
+    public function getTitle();
+
+    /**
+     * Sets the body
+     * @param string $body
+     * @return null
+     */
+    public function setBody($body);
+
+    /**
+     * Gets the body
+     * @return string
+     */
+    public function getBody();
+
+    /**
+     * Sets a image
+     * @param string $image
+     * @return null
+     */
+    public function setImage($image);
+
+    /**
+     * Gets the image
+     * @return string
+     */
+    public function getImage();
+
+    /**
+     * Sets the image alignment
+     * @param string $alignment
+     * @return null
+     */
+    public function setImageAlignment($imageAlignment);
+
+    /**
+     * Gets the image alignment
+     * @return string
+     */
+    public function getImageAlignment();
 
 }
