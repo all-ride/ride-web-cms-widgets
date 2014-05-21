@@ -1,4 +1,7 @@
 {
+    "align.left": "Links",
+    "align.right": "Rechts",
+    "label.alignment.image": "Uitlijning",
     "label.email": "E-mailadres",
     "label.message": "Boodschap",
     "label.name": "Naam",

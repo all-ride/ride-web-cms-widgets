@@ -1,4 +1,7 @@
 {
+    "align.left": "Left",
+    "align.right": "Right",
+    "label.alignment.image": "Alignment",
     "label.email": "Email address",
     "label.message": "Message",
     "label.name": "Name",

@@ -28,7 +28,7 @@ class PlainTextFormat extends AbstractTextFormat {
      * @return null
      */
     public function processForm(FormBuilder $formBuilder, Translator $translator, $locale) {
-        $formBuilder->addRow(TextWidget::PROPERTY_TEXT, 'text', array(
+        $formBuilder->addRow(TextWidget::PROPERTY_BODY, 'text', array(
             'label' => $translator->translate('label.text'),
             'attributes' => array(
                 'rows' => '12',

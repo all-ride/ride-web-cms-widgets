@@ -14,20 +14,42 @@ class GenericText implements Text {
     protected $format;
 
     /**
-     * The text
+     * Title for the text
      * @var string
      */
-    protected $text;
+    protected $title;
+
+    /**
+     * Body text
+     * @var string
+     */
+    protected $body;
+
+    /**
+     * Path to a image
+     * @var string
+     */
+    protected $image;
+
+    /**
+     * Alignment of the image
+     * @var string
+     */
+    protected $imageAlignment;
 
     /**
      * Constructs a new instance
      * @param string $format Name of the format
-     * @param string $text Name of the text
+     * @param string $body Body text
      * @return null
      */
-    public function __construct($format = null, $text = null) {
+    public function __construct($format = null, $body = null) {
         $this->format = $format;
-        $this->text = $text;
+        $this->body = $body;
+
+        $this->title = null;
+        $this->image = null;
+        $this->imageAlignment = null;
     }
 
     /**
@@ -48,20 +70,71 @@ class GenericText implements Text {
     }
 
     /**
-     * Sets the text
-     * @param string $text
+     * Sets the title
+     * @param string $title
      * @return null
      */
-    public function setText($text) {
-        $this->text = $text;
+    public function setTitle($title) {
+        $this->title = $title;
     }
 
     /**
-     * Gets the text
+     * Gets the title
      * @return string
      */
-    public function getText() {
-        return $this->text;
+    public function getTitle() {
+        return $this->title;
+    }
+
+    /**
+     * Sets the body
+     * @param string $body
+     * @return null
+     */
+    public function setBody($body) {
+        $this->body = $body;
+    }
+
+    /**
+     * Gets the body
+     * @return string
+     */
+    public function getBody() {
+        return $this->body;
+    }
+
+    /**
+     * Sets a image
+     * @param string $image
+     * @return null
+     */
+    public function setImage($image) {
+        $this->image = $image;
+    }
+
+    /**
+     * Gets the image
+     * @return string
+     */
+    public function getImage() {
+        return $this->image;
+    }
+
+    /**
+     * Sets the image alignment
+     * @param string $alignment
+     * @return null
+     */
+    public function setImageAlignment($imageAlignment) {
+        $this->imageAlignment = $imageAlignment;
+    }
+
+    /**
+     * Gets the image alignment
+     * @return string
+     */
+    public function getImageAlignment() {
+        return $this->imageAlignment;
     }
 
 }

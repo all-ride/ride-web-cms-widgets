@@ -35,7 +35,10 @@ class PropertiesTextIO extends AbstractTextIO {
 
         foreach ($locales as $locale) {
             $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_FORMAT . '.' . $locale, $text->getFormat());
-            $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_TEXT . '.' . $locale, $text->getText());
+            $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_TITLE . '.' . $locale, $data[TextWidget::PROPERTY_TITLE]);
+            $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_BODY . '.' . $locale, $data[TextWidget::PROPERTY_BODY]);
+            $widgetProperties->setWidgetProperty(str_replace('-', '.', TextWidget::PROPERTY_IMAGE) . '.' . $locale, $data[TextWidget::PROPERTY_IMAGE]);
+            $widgetProperties->setWidgetProperty(str_replace('-', '.', TextWidget::PROPERTY_IMAGE_ALIGNMENT) . '.' . $locale, $data[TextWidget::PROPERTY_IMAGE_ALIGNMENT]);
         }
     }
 
@@ -49,7 +52,10 @@ class PropertiesTextIO extends AbstractTextIO {
     public function getText(WidgetProperties $widgetProperties, $locale) {
         $text = new GenericText();
         $text->setFormat($widgetProperties->getWidgetProperty(TextWidget::PROPERTY_FORMAT . '.' . $locale));
-        $text->setText($widgetProperties->getWidgetProperty(TextWidget::PROPERTY_TEXT . '.' . $locale));
+        $text->setTitle($widgetProperties->getWidgetProperty(TextWidget::PROPERTY_TITLE . '.' . $locale));
+        $text->setBody($widgetProperties->getWidgetProperty(TextWidget::PROPERTY_BODY . '.' . $locale));
+        $text->setImage($widgetProperties->getWidgetProperty(str_replace('-', '.', TextWidget::PROPERTY_IMAGE) . '.' . $locale));
+        $text->setImageAlignment($widgetProperties->getWidgetProperty(str_replace('-', '.', TextWidget::PROPERTY_IMAGE_ALIGNMENT) . '.' . $locale));
 
         return $text;
     }
