@@ -36,9 +36,6 @@ class WysiwygTextFormat extends AbstractTextFormat {
             'filters' => array(
                 'trim' => array(),
             ),
-            'validators' => array(
-                'required' => array(),
-            )
         ));
     }
 
