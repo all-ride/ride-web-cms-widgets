@@ -27,6 +27,11 @@
         },
         {
             "interfaces": "ride\\library\\cms\\widget\\Widget",
+            "class": "ride\\web\\cms\\controller\\widget\\FilesWidget",
+            "id": "files"
+        },
+        {
+            "interfaces": "ride\\library\\cms\\widget\\Widget",
             "class": "ride\\web\\cms\\controller\\widget\\LanguageSelectWidget",
             "id": "language.select"
         },
