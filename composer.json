@@ -21,6 +21,7 @@
     "autoload": {
         "psr-0": {
             "ride\\web\\cms\\controller\\widget\\": ["src/"],
+            "ride\\web\\cms\\form\\": ["src/"],
             "ride\\web\\cms\\text\\": ["src/"]
         }
     }
