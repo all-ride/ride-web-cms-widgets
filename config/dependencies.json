@@ -52,6 +52,11 @@
         },
         {
             "interfaces": "ride\\library\\cms\\widget\\Widget",
+            "class": "ride\\web\\cms\\controller\\widget\\TextTocWidget",
+            "id": "text.toc"
+        },
+        {
+            "interfaces": "ride\\library\\cms\\widget\\Widget",
             "class": "ride\\web\\cms\\controller\\widget\\TitleWidget",
             "id": "title"
         }

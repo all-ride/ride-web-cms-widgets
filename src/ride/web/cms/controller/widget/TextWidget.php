@@ -95,7 +95,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
 
         $html = $textFormat->getHtml($text->getBody());
 
-        $this->setTemplateView(self::TEMPLATE, array(
+        $this->setTemplateView(static::TEMPLATE, array(
             'text' => $text,
             'title' => $text->getTitle(),
             'html' => $html,
