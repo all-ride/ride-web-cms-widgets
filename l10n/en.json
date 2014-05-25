@@ -20,6 +20,7 @@
     "widget.language.select": "Language Select",
     "widget.menu": "Menu",
     "widget.text": "Text",
+    "widget.text.toc": "Table Of Contents",
     "widget.template": "Template",
     "widget.title": "Page Title"
 }
