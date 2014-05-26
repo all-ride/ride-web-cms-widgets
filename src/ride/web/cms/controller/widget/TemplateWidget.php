@@ -20,6 +20,12 @@ class TemplateWidget extends AbstractWidget {
     const ICON = 'img/cms/widget/template.png';
 
     /**
+     * Path to the template resource of this widget
+     * @var string
+     */
+    const TEMPLATE = 'cms/widget/template/index';
+
+    /**
      * Name of the template property
      * @var string
      */
@@ -106,7 +112,7 @@ class TemplateWidget extends AbstractWidget {
      * @return string Relative path to the template resource
      */
     protected function getTemplate() {
-        return $this->properties->getWidgetProperty('template', 'cms/widget/template/index');
+        return $this->properties->getWidgetProperty('template', static::TEMPLATE);
     }
 
 }
