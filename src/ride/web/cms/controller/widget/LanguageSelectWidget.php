@@ -70,7 +70,7 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
             }
         }
 
-        $this->setTemplateView(self::TEMPLATE, array(
+        $this->setTemplateView(static::TEMPLATE, array(
         	'locales' => $urls,
         ));
 

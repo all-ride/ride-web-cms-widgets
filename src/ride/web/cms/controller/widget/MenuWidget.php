@@ -103,7 +103,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             $title = $parentNode->getName($this->locale);
         }
 
-        $this->setTemplateView(self::TEMPLATE, array(
+        $this->setTemplateView(static::TEMPLATE, array(
             'title' => $title,
             'depth' => $depth,
             'nodeTypes' => $nodeModel->getNodeTypeManager()->getNodeTypes(),

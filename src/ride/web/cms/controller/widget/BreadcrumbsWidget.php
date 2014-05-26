@@ -31,7 +31,7 @@ class BreadcrumbsWidget extends AbstractWidget implements StyleWidget {
      * @return null
      */
     public function indexAction() {
-        $this->setTemplateView(self::TEMPLATE);
+        $this->setTemplateView(static::TEMPLATE);
 
         if ($this->properties->isAutoCache()) {
             $this->properties->setCache(true);

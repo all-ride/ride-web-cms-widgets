@@ -31,7 +31,7 @@ class TitleWidget extends AbstractWidget implements StyleWidget {
      */
     public function indexAction() {
         // title is being fetched from the context so no template variables needed
-        $this->setTemplateView(self::TEMPLATE);
+        $this->setTemplateView(static::TEMPLATE);
 
     	if ($this->properties->isAutoCache()) {
     	    $this->properties->setCache(true);
