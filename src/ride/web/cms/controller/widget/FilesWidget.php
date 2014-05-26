@@ -55,7 +55,7 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
             ));
         }
 
-        $this->setTemplateView(self::TEMPLATE, array(
+        $this->setTemplateView(static::TEMPLATE, array(
             'title' => $title,
             'files' => $files,
         ));

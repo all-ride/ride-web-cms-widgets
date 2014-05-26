@@ -107,7 +107,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
             }
         }
 
-        $this->setTemplateView(self::TEMPLATE, array(
+        $this->setTemplateView(static::TEMPLATE, array(
             'form' => $form->getView(),
         ));
     }

@@ -30,7 +30,7 @@ class TextTocWidget extends AbstractWidget implements StyleWidget {
      * @return null
      */
     public function indexAction() {
-        $view = $this->setTemplateView(self::TEMPLATE);
+        $view = $this->setTemplateView(static::TEMPLATE);
         $view->addJavascript('js/cms/text.toc.js');
 
         if ($this->properties->isAutoCache()) {
