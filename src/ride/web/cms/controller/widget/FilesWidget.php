@@ -169,6 +169,7 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
 
                     $this->properties->setWidgetProperty('files.' . $this->locale . '.' . $index . '.file', $file['file']);
                     $this->properties->setWidgetProperty('files.' . $this->locale . '.' . $index . '.label', $file['label']);
+                    $this->properties->setWidgetProperty('files.' . $this->locale . '.' . $index . '.image', $file['image']);
 
                     $index++;
                 }
@@ -176,6 +177,7 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
                 while ($index <= $numFiles) {
                     $this->properties->setWidgetProperty('files.' . $this->locale . '.' . $index . '.file', null);
                     $this->properties->setWidgetProperty('files.' . $this->locale . '.' . $index . '.label', null);
+                    $this->properties->setWidgetProperty('files.' . $this->locale . '.' . $index . '.image', null);
 
                     $index++;
                 }
