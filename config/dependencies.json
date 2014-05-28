@@ -42,6 +42,11 @@
         },
         {
             "interfaces": "ride\\library\\cms\\widget\\Widget",
+            "class": "ride\\web\\cms\\controller\\widget\\RedirectWidget",
+            "id": "redirect"
+        },
+        {
+            "interfaces": "ride\\library\\cms\\widget\\Widget",
             "class": "ride\\web\\cms\\controller\\widget\\TemplateWidget",
             "id": "template"
         },
