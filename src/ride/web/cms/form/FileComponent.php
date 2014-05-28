@@ -31,6 +31,9 @@ class FileComponent extends AbstractComponent {
                 'trim' => array(),
             ),
         ));
+        $builder->addRow('image', 'image', array(
+            'label' => $translator->translate('label.image'),
+        ));
     }
 
 }
