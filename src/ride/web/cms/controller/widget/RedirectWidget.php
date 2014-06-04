@@ -47,7 +47,9 @@ class RedirectWidget extends AbstractWidget {
      */
     public function indexAction(NodeModel $nodeModel) {
         $url = $this->properties->getWidgetProperty(self::PROPERTY_URL);
-        if (!$url) {
+        if ($url) {
+            $url = $this->properties->getNode()->resolveUrl($this->locale, $this->request->getBaseScript(), $url);
+        } else {
             $nodeId = $this->properties->getWidgetProperty(self::PROPERTY_NODE);
             if (!$nodeId) {
                 return;
@@ -118,7 +120,7 @@ class RedirectWidget extends AbstractWidget {
             'label' => $translator->translate('label.node'),
             'options' => $nodeList,
         ));
-        $form->addRow(self::PROPERTY_URL, 'website', array(
+        $form->addRow(self::PROPERTY_URL, 'string', array(
             'label' => $translator->translate('label.url'),
         ));
 
