@@ -46,7 +46,7 @@ class RedirectWidget extends AbstractWidget {
      * @return null
      */
     public function indexAction(NodeModel $nodeModel) {
-        $url = $this->properties->getWidgetProperty(self::PROPERTY_URL);
+        $url = $this->getUrl();
         if ($url) {
             $url = $this->properties->getNode()->resolveUrl($this->locale, $this->request->getBaseScript(), $url);
         } else {
@@ -71,7 +71,7 @@ class RedirectWidget extends AbstractWidget {
         $translator = $this->getTranslator();
         $preview = '---';
 
-        $url = $this->properties->getWidgetProperty(self::PROPERTY_URL);
+        $url = $this->getUrl();
         if ($url) {
             $preview = $translator->translate('label.url') . ': ' . $url;
         } else {
@@ -96,7 +96,7 @@ class RedirectWidget extends AbstractWidget {
 
         $data = array(
             self::PROPERTY_NODE => $this->properties->getWidgetProperty(self::PROPERTY_NODE),
-            self::PROPERTY_URL => $this->properties->getWidgetProperty(self::PROPERTY_URL),
+            self::PROPERTY_URL => $this->getUrl(),
         );
 
         if ($data[self::PROPERTY_URL]) {
@@ -136,7 +136,7 @@ class RedirectWidget extends AbstractWidget {
                 $data = $form->getData();
 
                 $this->properties->setWidgetProperty(self::PROPERTY_NODE, $data[self::PROPERTY_NODE]);
-                $this->properties->setWidgetProperty(self::PROPERTY_URL, $data[self::PROPERTY_URL]);
+                $this->properties->setWidgetProperty(self::PROPERTY_URL . '.' . $this->locale, $data[self::PROPERTY_URL]);
 
                 return true;
             } catch (ValidationException $e) {
@@ -150,6 +150,19 @@ class RedirectWidget extends AbstractWidget {
         $view->addJavascript('js/cms/redirect.js');
 
         return false;
+    }
+
+    /**
+     * Gets the URL from the widget properties
+     * @return string|null
+     */
+    protected function getUrl() {
+        $url = $this->properties->getWidgetProperty(self::PROPERTY_URL . '.' . $this->locale);
+        if (!$url) {
+            $url = $this->properties->getWidgetProperty(self::PROPERTY_URL);
+        }
+
+        return $url;
     }
 
 }
