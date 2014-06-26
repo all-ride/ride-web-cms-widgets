@@ -46,7 +46,7 @@ class RedirectWidget extends AbstractWidget {
      * @return null
      */
     public function indexAction(NodeModel $nodeModel) {
-        $url = $this->getUrl();
+        $url = $this->getRedirectUrl();
         if ($url) {
             $url = $this->properties->getNode()->resolveUrl($this->locale, $this->request->getBaseScript(), $url);
         } else {
@@ -71,7 +71,7 @@ class RedirectWidget extends AbstractWidget {
         $translator = $this->getTranslator();
         $preview = '---';
 
-        $url = $this->getUrl();
+        $url = $this->getRedirectUrl();
         if ($url) {
             $preview = $translator->translate('label.url') . ': ' . $url;
         } else {
@@ -96,7 +96,7 @@ class RedirectWidget extends AbstractWidget {
 
         $data = array(
             self::PROPERTY_NODE => $this->properties->getWidgetProperty(self::PROPERTY_NODE),
-            self::PROPERTY_URL => $this->getUrl(),
+            self::PROPERTY_URL => $this->getRedirectUrl(),
         );
 
         if ($data[self::PROPERTY_URL]) {
@@ -156,7 +156,7 @@ class RedirectWidget extends AbstractWidget {
      * Gets the URL from the widget properties
      * @return string|null
      */
-    protected function getUrl() {
+    protected function getRedirectUrl() {
         $url = $this->properties->getWidgetProperty(self::PROPERTY_URL . '.' . $this->locale);
         if (!$url) {
             $url = $this->properties->getWidgetProperty(self::PROPERTY_URL);
