@@ -64,6 +64,11 @@
             "interfaces": "ride\\library\\cms\\widget\\Widget",
             "class": "ride\\web\\cms\\controller\\widget\\TitleWidget",
             "id": "title"
+        },
+        {
+            "interfaces": "ride\\library\\cms\\widget\\Widget",
+            "class": "ride\\web\\cms\\controller\\widget\\GoogleAnalyticsWidget",
+            "id": "google.analytics"
         }
     ]
 }
