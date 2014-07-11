@@ -2,6 +2,7 @@
 
 namespace ride\web\cms\controller\widget;
 
+use ride\library\http\Response;
 use ride\library\router\Route;
 use ride\library\system\file\browser\FileBrowser;
 use ride\library\validation\exception\ValidationException;
