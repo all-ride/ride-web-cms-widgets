@@ -385,6 +385,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         return array(
             'container' => 'label.widget.style.container',
             'title' => 'label.widget.style.title',
+            'subtitle' => 'label.widget.style.subtitle',
         );
     }
 
