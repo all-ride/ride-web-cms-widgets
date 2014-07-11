@@ -16,6 +16,12 @@ class GoogleAnalyticsWidget extends AbstractWidget {
     const NAME = 'google.analytics';
 
     /**
+     * Path to the icon of this widget
+     * @var string
+     */
+    const ICON = 'img/cms/widget/google-analytics.png';
+
+    /**
      * Path to the template of this widget
      * @var string
      */
@@ -27,6 +33,9 @@ class GoogleAnalyticsWidget extends AbstractWidget {
      */
     public function indexAction() {
         $code = $this->properties->getWidgetProperty('code');
+        if (!$code) {
+            return;
+        }
 
         $this->setTemplateView(self::TEMPLATE, array(
             'code' => $code,
@@ -40,11 +49,11 @@ class GoogleAnalyticsWidget extends AbstractWidget {
     public function getPropertiesPreview() {
         $translator = $this->getTranslator();
 
-        $preview = '';
-
         $code = $this->properties->getWidgetProperty('code');
         if ($code) {
-            $preview .= '<strong>' . $translator->translate('label.code.google.analytics') . '</strong>:' . $code . '<br/>>';
+            $preview = '<strong>' . $translator->translate('label.code.google.analytics') . '</strong>:' . $code . '<br/>>';
+        } else {
+            $preview = '---';
         }
 
         return $preview;
@@ -64,7 +73,8 @@ class GoogleAnalyticsWidget extends AbstractWidget {
 
         $form = $this->createFormBuilder($data);
         $form->addRow('code', 'string', array(
-            'label' => $translator->translate('label.code.google.analytics')
+            'label' => $translator->translate('label.code.google.analytics'),
+            'description' => $translator->translate('label.code.google.analytics.description'),
         ));
 
         $form = $form->build();
