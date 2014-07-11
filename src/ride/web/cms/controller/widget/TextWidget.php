@@ -2,10 +2,13 @@
 
 namespace ride\web\cms\controller\widget;
 
+use ride\library\cms\node\exception\NodeNotFoundException;
+use ride\library\cms\node\NodeModel;
 use ride\library\i18n\I18n;
 use ride\library\validation\exception\ValidationException;
 use ride\library\StringHelper;
 
+use \ride\web\cms\form\CallToActionComponent;
 use \ride\web\cms\text\Text;
 
 /**
@@ -62,6 +65,12 @@ class TextWidget extends AbstractWidget implements StyleWidget {
     const PROPERTY_TITLE = 'title';
 
     /**
+     * Name of the subtitle property
+     * @var string
+     */
+    const PROPERTY_SUBTITLE = 'subtitle';
+
+    /**
      * Name of the body property
      * @var string
      */
@@ -80,6 +89,12 @@ class TextWidget extends AbstractWidget implements StyleWidget {
     const PROPERTY_IMAGE_ALIGNMENT = 'image-align';
 
     /**
+     * Name of the CTA property
+     * @var string
+     */
+    const PROPERTY_CTA = 'cta';
+
+    /**
      * Name of the I/O property
      * @var string
      */
@@ -89,18 +104,39 @@ class TextWidget extends AbstractWidget implements StyleWidget {
      * Sets a text view to the response
      * @return null
      */
-    public function indexAction() {
+    public function indexAction(NodeModel $nodeModel) {
         $text = $this->getTextIO()->getText($this->properties, $this->locale);
         $textFormat = $this->getTextFormat($text->getFormat());
 
         $html = $textFormat->getHtml($text->getBody());
+        $callToActions = $text->getCallToActions();
+        foreach ($callToActions as $index => $callToAction) {
+            $node = $callToAction->getNode();
+            $url = $callToAction->getUrl();
+
+            if ($node) {
+                try {
+                    $node = $nodeModel->getNode($node);
+
+                    $callToAction->setUrl($node->getUrl($this->locale, $this->request->getBaseUrl()));
+                } catch (NodeNotFoundException $exception) {
+                    unset($callToActions[$index]);
+                }
+            } elseif ($url) {
+                $callToAction->setUrl($this->properties->getNode()->resolveUrl($this->locale, $this->request->getBaseUrl(), $url));
+            } else {
+                unset($callToActions[$index]);
+            }
+        }
 
         $this->setTemplateView(static::TEMPLATE, array(
             'text' => $text,
             'title' => $text->getTitle(),
+            'subtitle' => $text->getSubtitle(),
             'html' => $html,
             'image' => $text->getImage(),
             'imageAlignment' => $text->getImageAlignment(),
+            'callToActions' => $callToActions,
         ));
 
         if ($this->properties->isAutoCache()) {
@@ -117,6 +153,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         $textFormat = $this->getTextFormat($text->getFormat());
 
         $title = $text->getTitle();
+        $subtitle = $text->getSubtitle();
         $body = $textFormat->getHtml($text->getBody());
         $image = $text->getImage();
 
@@ -132,6 +169,9 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         if ($title) {
             $preview .= '<strong>' . $title . '</strong><br>';
         }
+        if ($subtitle) {
+            $preview .= '<strong><em>' . $subtitle . '</em></strong><br>';
+        }
 
         $preview .= $body;
 
@@ -143,14 +183,20 @@ class TextWidget extends AbstractWidget implements StyleWidget {
      * @param \ride\library\i18n\I18n $i18n
      * @return null
      */
-    public function propertiesAction(I18n $i18n) {
+    public function propertiesAction(I18n $i18n, NodeModel $nodeModel) {
         $locales = $i18n->getLocaleCodeList();
         $hasMultipleLocales = count($locales) != 1;
 
         // get the data
         $io = $this->getTextIO();
 
-        $text = $io->getText($this->properties, $this->locale);
+        $existing = $this->request->getQueryParameter('text');
+        if ($existing) {
+            $text = $io->getExistingText($this->properties, $this->locale, $existing, $this->request->getQueryParameter('new'));
+        } else {
+            $text = $io->getText($this->properties, $this->locale);
+        }
+
         if (!$text->getFormat()) {
             $text->setFormat($this->getDefaultTextFormat());
         }
@@ -159,26 +205,49 @@ class TextWidget extends AbstractWidget implements StyleWidget {
 
         $data = array(
             self::PROPERTY_TITLE => $text->getTitle(),
+            self::PROPERTY_SUBTITLE => $text->getSubtitle(),
             self::PROPERTY_BODY => $text->getBody(),
             self::PROPERTY_IMAGE => $text->getImage(),
             self::PROPERTY_IMAGE_ALIGNMENT => $text->getImageAlignment(),
+            self::PROPERTY_CTA => $text->getCallToActions(),
         );
+        $data['title-use'] = $data[self::PROPERTY_TITLE] || $data[self::PROPERTY_SUBTITLE];
+        $data['image-use'] = $data[self::PROPERTY_IMAGE];
+
+        $io->processFormData($text, $data);
 
         // create the form
         $translator = $this->getTranslator();
 
+        $ctaComponent = new CallToActionComponent();
+        $ctaComponent->setNodes($this->getNodeList($nodeModel));
+
         $form = $this->createFormBuilder($data);
         $form->setId('form-text');
+
+        $format->processForm($form, $translator, $this->locale);
+        $io->processForm($this->properties, $this->locale, $translator, $text, $form);
+
+        $form->addRow('title-use', 'option', array(
+            'label' => ' ',
+            'description' => $translator->translate('label.title.use'),
+        ));
         $form->addRow(self::PROPERTY_TITLE, 'string', array(
             'label' => $translator->translate('label.title'),
             'filters' => array(
                 'trim' => array(),
             ),
         ));
-
-        $format->processForm($form, $translator, $this->locale);
-        $io->processForm($this->properties, $this->locale, $translator, $text, $form);
-
+        $form->addRow(self::PROPERTY_SUBTITLE, 'string', array(
+            'label' => $translator->translate('label.subtitle'),
+            'filters' => array(
+                'trim' => array(),
+            ),
+        ));
+        $form->addRow('image-use', 'option', array(
+            'label' => ' ',
+            'description' => $translator->translate('label.image.use'),
+        ));
         $form->addRow(self::PROPERTY_IMAGE, 'image', array(
             'label' => $translator->translate('label.image'),
         ));
@@ -187,6 +256,13 @@ class TextWidget extends AbstractWidget implements StyleWidget {
             'options' => array(
                 Text::ALIGN_LEFT => $translator->translate('align.left'),
                 Text::ALIGN_RIGHT => $translator->translate('align.right'),
+            ),
+        ));
+        $form->addRow(self::PROPERTY_CTA, 'collection', array(
+            'label' => $translator->translate('label.cta'),
+            'type' => 'component',
+            'options' => array(
+                'component' => $ctaComponent,
             ),
         ));
 
@@ -200,29 +276,43 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         // handle form submission
         $form = $form->build();
         if ($form->isSubmitted()) {
-            try {
-                $form->validate();
+            if ($existing) {
+                $form->setData($data);
+            } else {
+                try {
+                    $form->validate();
 
-                $data = $form->getData();
+                    $data = $form->getData();
 
-                $this->properties->setWidgetProperty(self::PROPERTY_IO, $io->getName());
+                    $this->properties->setWidgetProperty(self::PROPERTY_IO, $io->getName());
 
-                $format->setText($text, $data);
+                    $format->setText($text, $data);
 
-                if ($hasMultipleLocales && $data['locales-all']) {
-                    $io->setText($this->properties, $locales, $text, $data);
-                } else {
-                    $io->setText($this->properties, $this->locale, $text, $data);
+                    if ($hasMultipleLocales && $data['locales-all']) {
+                        $io->setText($this->properties, $locales, $text, $data);
+                    } else {
+                        $io->setText($this->properties, $this->locale, $text, $data);
+                    }
+
+                    return true;
+                } catch (ValidationException $exception) {
+                    $this->setValidationException($exception, $form);
                 }
-
-                return true;
-            } catch (ValidationException $exception) {
-                $this->setValidationException($exception, $form);
             }
         }
 
+        $node = $this->properties->getNode();
+        $url = $this->getUrl('cms.widget.properties', array(
+            'locale' => $this->locale,
+            'site' => $node->getRootNodeId(),
+            'node' => $node->getId(),
+            'region' => $this->region,
+            'widget' => $this->id,
+        ));
+
         // set view
         $view = $this->setTemplateView('cms/widget/text/properties', array(
+            'action' => $url,
             'form' => $form->getView(),
             'io' => $io,
             'format' => $format,

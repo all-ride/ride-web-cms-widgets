@@ -2,6 +2,8 @@
 
 namespace ride\web\cms\text;
 
+use \InvalidArgumentException;
+
 /**
  * Generic text data container
  */
@@ -38,6 +40,12 @@ class GenericText implements Text {
     protected $imageAlignment;
 
     /**
+     * Call to actions
+     * @var array|null
+     */
+    protected $callToActions;
+
+    /**
      * Constructs a new instance
      * @param string $format Name of the format
      * @param string $body Body text
@@ -48,8 +56,10 @@ class GenericText implements Text {
         $this->body = $body;
 
         $this->title = null;
+        $this->subtitle = null;
         $this->image = null;
         $this->imageAlignment = null;
+        $this->callToActions = array();
     }
 
     /**
@@ -84,6 +94,23 @@ class GenericText implements Text {
      */
     public function getTitle() {
         return $this->title;
+    }
+
+    /**
+     * Sets the subtitle
+     * @param string $subtitle
+     * @return null
+     */
+    public function setSubtitle($subtitle) {
+        $this->subtitle = $subtitle;
+    }
+
+    /**
+     * Gets the subtitle
+     * @return string
+     */
+    public function getSubtitle() {
+        return $this->subtitle;
     }
 
     /**
@@ -135,6 +162,29 @@ class GenericText implements Text {
      */
     public function getImageAlignment() {
         return $this->imageAlignment;
+    }
+
+    /**
+     * Sets the call to actions
+     * @param array|null $callToActions
+     * @return null
+     */
+    public function setCallToActions(array $callToActions = array()) {
+        foreach ($callToActions as $index => $callToAction) {
+            if (!$callToAction instanceof CallToAction) {
+                throw new InvalidArgumentException('Could not set call to actions: value on index ' . $index . ' is not an instance of CallToAction');
+            }
+        }
+
+        $this->callToActions = $callToActions;
+    }
+
+    /**
+     * Gets the call to actions
+     * @return array|null
+     */
+    public function getCallToActions() {
+        return $this->callToActions;
     }
 
 }

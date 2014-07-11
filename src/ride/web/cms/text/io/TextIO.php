@@ -34,6 +34,14 @@ interface TextIO {
     public function processForm(WidgetProperties $widgetProperties, $locale, Translator $translator, Text $text, FormBuilder $formBuilder);
 
     /**
+     * Hook to process the form data
+     * @param \ride\web\cms\text\Text $text Instance of the text
+     * @param array $data Data to preset the form
+     * @return null
+     */
+    public function processFormData(Text $text, array &$data);
+
+    /**
      * Stores the text in the data source
      * @param \ride\library\widget\WidgetProperties $widgetProperties Instance
      * of the widget properties
@@ -52,5 +60,16 @@ interface TextIO {
      * @return \ride\web\cms\text\Text Instance of the text
      */
     public function getText(WidgetProperties $widgetProperties, $locale);
+
+    /**
+     * Gets a existing text from the data source
+     * @param \ride\library\widget\WidgetProperties $widgetProperties Instance
+     * of the widget properties
+     * @param string $locale Code of the current locale
+     * @param string $text Identifier of the text
+     * @param boolean $isNew Flag to see if this text will be a new text
+     * @return \ride\web\cms\text\Text Instance of the text
+     */
+    public function getExistingText(WidgetProperties $widgetProperties, $locale, $text, $isNew);
 
 }

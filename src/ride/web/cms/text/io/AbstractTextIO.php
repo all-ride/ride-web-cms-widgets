@@ -37,4 +37,14 @@ abstract class AbstractTextIO implements TextIO {
 
     }
 
+    /**
+     * Hook to process the form data
+     * @param \ride\web\cms\text\Text $text Instance of the text
+     * @param array $data Data to preset the form
+     * @return null
+     */
+    public function processFormData(Text $text, array &$data) {
+
+    }
+
 }
