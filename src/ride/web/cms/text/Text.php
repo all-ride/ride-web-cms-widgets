@@ -3,7 +3,7 @@
 namespace ride\web\cms\text;
 
 /**
- * Interface for text data container
+ * Interface for text
  */
 interface Text {
 
@@ -46,6 +46,19 @@ interface Text {
     public function getTitle();
 
     /**
+     * Sets the subtitle
+     * @param string $subtitle
+     * @return null
+     */
+    public function setSubtitle($subtitle);
+
+    /**
+     * Gets the subtitle
+     * @return string
+     */
+    public function getSubtitle();
+
+    /**
      * Sets the body
      * @param string $body
      * @return null
@@ -83,5 +96,18 @@ interface Text {
      * @return string
      */
     public function getImageAlignment();
+
+    /**
+     * Sets the call to actions
+     * @param array $callToActions
+     * @return null
+     */
+    public function setCallToActions(array $callToActions = array());
+
+    /**
+     * Gets the call to actions
+     * @return array
+     */
+    public function getCallToActions();
 
 }
