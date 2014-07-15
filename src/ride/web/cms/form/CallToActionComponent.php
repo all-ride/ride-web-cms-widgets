@@ -50,6 +50,7 @@ class CallToActionComponent extends AbstractComponent {
     public function prepareForm(FormBuilder $builder, array $options) {
         $translator = $options['translator'];
 
+        $builder->addRow('id', 'hidden');
         if ($this->icons) {
             $builder->addRow('icon', 'select', array(
                 'label' => $translator->translate('label.icon'),
