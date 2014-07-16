@@ -8,12 +8,6 @@ namespace ride\web\cms\text;
 class GenericCallToAction implements CallToAction {
 
     /**
-     * Name of the icon
-     * @var string
-     */
-    protected $icon;
-
-    /**
      * Label for the action
      * @var string
      */
@@ -32,21 +26,10 @@ class GenericCallToAction implements CallToAction {
     protected $url;
 
     /**
-     * Sets the icon
-     * @param string $icon
-     * @return null
+     * Name of the icon
+     * @var string
      */
-    public function setIcon($icon) {
-        $this->icon = $icon;
-    }
-
-    /**
-     * Gets the icon
-     * @return string
-     */
-    public function getIcon() {
-        return $this->icon;
-    }
+    protected $type;
 
     /**
      * Sets the label
@@ -97,6 +80,23 @@ class GenericCallToAction implements CallToAction {
      */
     public function getUrl() {
         return $this->url;
+    }
+
+    /**
+     * Sets the type
+     * @param string $type
+     * @return null
+     */
+    public function setType($type) {
+        $this->type = $type;
+    }
+
+    /**
+     * Gets the type
+     * @return string
+     */
+    public function getType() {
+        return $this->type;
     }
 
 }

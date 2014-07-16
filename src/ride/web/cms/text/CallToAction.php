@@ -8,19 +8,6 @@ namespace ride\web\cms\text;
 interface CallToAction {
 
     /**
-     * Sets the icon
-     * @param string $icon
-     * @return null
-     */
-    public function setIcon($icon);
-
-    /**
-     * Gets the icon
-     * @return string
-     */
-    public function getIcon();
-
-    /**
      * Sets the label
      * @param string $label
      * @return null
@@ -58,5 +45,18 @@ interface CallToAction {
      * @return string
      */
     public function getUrl();
+
+    /**
+     * Sets the type
+     * @param string $type
+     * @return null
+     */
+    public function setType($type);
+
+    /**
+     * Gets the type
+     * @return string
+     */
+    public function getType();
 
 }

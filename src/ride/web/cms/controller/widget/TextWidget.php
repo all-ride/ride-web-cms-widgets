@@ -222,6 +222,16 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         $ctaComponent = new CallToActionComponent();
         $ctaComponent->setNodes($this->getNodeList($nodeModel));
 
+        $types = $this->config->get('cms.text.cta.type');
+        if (is_array($types)) {
+            $types = $this->config->getConfigHelper()->flattenConfig($types);
+            foreach ($types as $index => $label) {
+                $types[$index] = $translator->translate($label);
+            }
+
+            $ctaComponent->setTypes(array('' => '---') + $types);
+        }
+
         $form = $this->createFormBuilder($data);
         $form->setId('form-text');
 
