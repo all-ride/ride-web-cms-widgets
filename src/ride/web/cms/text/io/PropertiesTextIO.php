@@ -46,10 +46,10 @@ class PropertiesTextIO extends AbstractTextIO {
 
             $index = 1;
             foreach ($data[TextWidget::PROPERTY_CTA] as $cta) {
-                $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_CTA . '.' . $locale . '.' . $index . '.icon', $cta['icon']);
                 $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_CTA . '.' . $locale . '.' . $index . '.label', $cta['label']);
                 $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_CTA . '.' . $locale . '.' . $index . '.node', $cta['node']);
                 $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_CTA . '.' . $locale . '.' . $index . '.url', $cta['url']);
+                $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_CTA . '.' . $locale . '.' . $index . '.type', $cta['type']);
 
                 $index++;
             }

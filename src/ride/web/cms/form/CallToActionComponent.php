@@ -14,7 +14,7 @@ class CallToActionComponent extends AbstractComponent {
      * Available icons
      * @var array
      */
-    protected $icons;
+    protected $types;
 
     /**
      * Available nodes
@@ -23,12 +23,12 @@ class CallToActionComponent extends AbstractComponent {
     protected $nodes;
 
     /**
-     * Sets available icons for the call to action button
-     * @param array $icons Name of the icon as key, label as value
+     * Sets available types for the call to action button
+     * @param array $types Name of the type as key, label as value
      * @return null
      */
-    public function setIcons(array $icons) {
-        $this->icons = $icons;
+    public function setTypes(array $types) {
+        $this->types = $types;
     }
 
     /**
@@ -51,12 +51,6 @@ class CallToActionComponent extends AbstractComponent {
         $translator = $options['translator'];
 
         $builder->addRow('id', 'hidden');
-        if ($this->icons) {
-            $builder->addRow('icon', 'select', array(
-                'label' => $translator->translate('label.icon'),
-                'options' => $this->icons,
-            ));
-        }
         $builder->addRow('label', 'string', array(
             'label' => $translator->translate('label.label'),
             'filters' => array(
@@ -78,6 +72,12 @@ class CallToActionComponent extends AbstractComponent {
                 'trim' => array(),
             )
         ));
+        if ($this->types) {
+            $builder->addRow('type', 'select', array(
+                'label' => $translator->translate('label.type'),
+                'options' => $this->types,
+            ));
+        }
     }
 
 }
