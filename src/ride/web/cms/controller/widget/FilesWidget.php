@@ -144,6 +144,7 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
         $form->addRow('files', 'collection', array(
             'label' => $translator->translate('label.files'),
             'type' => 'component',
+            'order' => true,
             'options' => array(
                 'component' => new FileComponent(),
             ),
