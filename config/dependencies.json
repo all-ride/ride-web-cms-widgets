@@ -27,6 +27,11 @@
         },
         {
             "interfaces": "ride\\library\\cms\\widget\\Widget",
+            "class": "ride\\web\\cms\\controller\\widget\\EmbedWidget",
+            "id": "embed"
+        },
+        {
+            "interfaces": "ride\\library\\cms\\widget\\Widget",
             "class": "ride\\web\\cms\\controller\\widget\\FilesWidget",
             "id": "files"
         },
