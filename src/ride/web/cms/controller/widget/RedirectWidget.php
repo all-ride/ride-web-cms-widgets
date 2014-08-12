@@ -2,6 +2,7 @@
 
 namespace ride\web\cms\controller\widget;
 
+use ride\library\cms\node\exception\NodeNotFoundException;
 use ride\library\cms\node\NodeModel;
 
 /**
@@ -78,8 +79,13 @@ class RedirectWidget extends AbstractWidget {
             $nodeId = $this->properties->getWidgetProperty(self::PROPERTY_NODE);
             if ($nodeId) {
                 $nodeModel = $this->dependencyInjector->get('ride\\library\\cms\\node\\NodeModel');
-                $node = $nodeModel->getNode($nodeId);
-                $preview = $translator->translate('label.node') . ': ' . $node->getName($this->locale);
+                try {
+                    $node = $nodeModel->getNode($nodeId);
+
+                    $preview = $translator->translate('label.node') . ': ' . $node->getName($this->locale);
+                } catch (NodeNotFoundException $exception) {
+
+                }
             }
         }
 
