@@ -22,10 +22,10 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
     const ICON = 'img/cms/widget/embed.png';
 
     /**
-     * Path to the template resource of this widget
+     * Namespace for the templates of this widget
      * @var string
      */
-    const TEMPLATE = 'cms/widget/embed/index';
+    const TEMPLATE_NAMESPACE = 'cms/widget/embed';
 
     /**
      * Name of the embed property
@@ -43,7 +43,7 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
             return;
         }
 
-        $this->setTemplateView(self::TEMPLATE, array(
+       $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
             'embed' => $embed,
         ));
 
@@ -74,14 +74,26 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
 
         $data = array(
             self::PROPERTY_EMBED => $this->properties->getWidgetProperty(self::PROPERTY_EMBED),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
         );
 
         $form = $this->createFormBuilder($data);
         $form->addRow(self::PROPERTY_EMBED, 'text', array(
             'label' => $translator->translate('label.embed'),
+            'attributes' => array(
+                'rows' => 10,
+            ),
             'filters' => array(
                 'trim' => array(),
             )
+        ));
+        $form->addRow(self::PROPERTY_TEMPLATE, 'select', array(
+            'label' => $translator->translate('label.template'),
+            'description' => $translator->translate('label.template.widget.description'),
+            'options' => $this->getAvailableTemplates(static::TEMPLATE_NAMESPACE),
+            'validators' => array(
+                'required' => array(),
+            ),
         ));
 
         $form = $form->build();
@@ -97,13 +109,15 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
 
                 $this->properties->setWidgetProperty(self::PROPERTY_EMBED, $data[self::PROPERTY_EMBED]);
 
+                $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
+
                 return true;
             } catch (ValidationException $exception) {
                 $this->setValidationException($exception, $form);
             }
         }
 
-        $this->setTemplateView('cms/widget/embed/properties', array(
+        $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
             'form' => $form->getView(),
         ));
 

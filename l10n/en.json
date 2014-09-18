@@ -4,6 +4,8 @@
     "label.alignment.image": "Alignment",
     "label.code.google.analytics": "Tracking ID",
     "label.code.google.analytics.description": "A string like UA-000000-01 to identify your Google Analytics account",
+    "label.code.google.tags": "Tags-ID",
+    "label.code.google.tags.description": "A string like GTM-000000 to identify your Google Tags account",
     "label.cta": "Call to action",
     "label.email": "Email address",
     "label.embed": "Embed",

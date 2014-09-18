@@ -22,10 +22,10 @@ class GoogleAnalyticsWidget extends AbstractWidget {
     const ICON = 'img/cms/widget/google-analytics.png';
 
     /**
-     * Path to the template of this widget
+     * Namespace for the templates of this widget
      * @var string
      */
-    const TEMPLATE = 'cms/widget/google/analytics';
+    const TEMPLATE_NAMESPACE = 'cms/widget/google-analytics';
 
     /**
      * Sets the title view to the response
@@ -37,7 +37,7 @@ class GoogleAnalyticsWidget extends AbstractWidget {
             return;
         }
 
-        $this->setTemplateView(self::TEMPLATE, array(
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
             'code' => $code,
         ));
     }
@@ -68,13 +68,22 @@ class GoogleAnalyticsWidget extends AbstractWidget {
         $translator = $this->getTranslator();
 
         $data = array(
-            'code' => $this->properties->getWidgetProperty('code')
+            'code' => $this->properties->getWidgetProperty('code'),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
         );
 
         $form = $this->createFormBuilder($data);
         $form->addRow('code', 'string', array(
             'label' => $translator->translate('label.code.google.analytics'),
             'description' => $translator->translate('label.code.google.analytics.description'),
+        ));
+        $form->addRow(self::PROPERTY_TEMPLATE, 'select', array(
+            'label' => $translator->translate('label.template'),
+            'description' => $translator->translate('label.template.widget.description'),
+            'options' => $this->getAvailableTemplates(static::TEMPLATE_NAMESPACE),
+            'validators' => array(
+                'required' => array(),
+            ),
         ));
 
         $form = $form->build();
@@ -90,6 +99,7 @@ class GoogleAnalyticsWidget extends AbstractWidget {
                 $data = $form->getData();
 
                 $this->properties->setWidgetProperty('code', $data['code']);
+                $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
 
                 return true;
             } catch (ValidationException $exception) {
@@ -97,7 +107,7 @@ class GoogleAnalyticsWidget extends AbstractWidget {
             }
         }
 
-        $this->setTemplateView('cms/widget/google/properties', array(
+        $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
             'form' => $form->getView(),
         ));
     }

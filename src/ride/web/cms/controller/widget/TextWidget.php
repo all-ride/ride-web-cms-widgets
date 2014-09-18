@@ -29,12 +29,6 @@ class TextWidget extends AbstractWidget implements StyleWidget {
     const ICON = 'img/cms/widget/text.png';
 
     /**
-     * Path to the template of the widget view
-     * @var string
-     */
-    const TEMPLATE = 'cms/widget/text/text';
-
-    /**
      * Parameter for the default format
      * @var string
      */
@@ -101,6 +95,12 @@ class TextWidget extends AbstractWidget implements StyleWidget {
     const PROPERTY_IO = 'io';
 
     /**
+     * Namespace for the templates of this widget
+     * @var string
+     */
+    const TEMPLATE_NAMESPACE = 'cms/widget/text';
+
+    /**
      * Sets a text view to the response
      * @return null
      */
@@ -129,7 +129,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
             }
         }
 
-        $this->setTemplateView(static::TEMPLATE, array(
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
             'text' => $text,
             'title' => $text->getTitle(),
             'subtitle' => $text->getSubtitle(),
@@ -210,6 +210,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
             self::PROPERTY_IMAGE => $text->getImage(),
             self::PROPERTY_IMAGE_ALIGNMENT => $text->getImageAlignment(),
             self::PROPERTY_CTA => $text->getCallToActions(),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
         );
         $data['title-use'] = $data[self::PROPERTY_TITLE] || $data[self::PROPERTY_SUBTITLE];
         $data['image-use'] = $data[self::PROPERTY_IMAGE];
@@ -275,6 +276,14 @@ class TextWidget extends AbstractWidget implements StyleWidget {
                 'component' => $ctaComponent,
             ),
         ));
+        $form->addRow(self::PROPERTY_TEMPLATE, 'select', array(
+            'label' => $translator->translate('label.template'),
+            'description' => $translator->translate('label.template.widget.description'),
+            'options' => $this->getAvailableTemplates(static::TEMPLATE_NAMESPACE),
+            'validators' => array(
+                'required' => array(),
+            ),
+        ));
 
         if ($hasMultipleLocales) {
             $form->addRow('locales-all', 'option', array(
@@ -304,6 +313,8 @@ class TextWidget extends AbstractWidget implements StyleWidget {
                         $io->setText($this->properties, $this->locale, $text, $data);
                     }
 
+                    $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
+
                     return true;
                 } catch (ValidationException $exception) {
                     $this->setValidationException($exception, $form);
@@ -321,7 +332,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         ));
 
         // set view
-        $view = $this->setTemplateView('cms/widget/text/properties', array(
+        $view = $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
             'action' => $url,
             'form' => $form->getView(),
             'io' => $io,

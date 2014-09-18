@@ -19,13 +19,13 @@ class GoogleTagsWidget extends AbstractWidget {
      * Path to the icon of this widget
      * @var string
      */
-    const ICON = 'img/cms/widget/google-analytics.png';
+    const ICON = 'img/cms/widget/google-tags.png';
 
     /**
-     * Path to the template of this widget
+     * Namespace for the templates of this widget
      * @var string
      */
-    const TEMPLATE = 'cms/widget/google/google.tags';
+    const TEMPLATE_NAMESPACE = 'cms/widget/google-tags';
 
     /**
      * Sets the title view to the response
@@ -68,13 +68,22 @@ class GoogleTagsWidget extends AbstractWidget {
         $translator = $this->getTranslator();
 
         $data = array(
-            'code' => $this->properties->getWidgetProperty('code')
+            'code' => $this->properties->getWidgetProperty('code'),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
         );
 
         $form = $this->createFormBuilder($data);
         $form->addRow('code', 'string', array(
             'label' => $translator->translate('label.code.google.tags'),
             'description' => $translator->translate('label.code.google.tags.description'),
+        ));
+        $form->addRow(self::PROPERTY_TEMPLATE, 'select', array(
+            'label' => $translator->translate('label.template'),
+            'description' => $translator->translate('label.template.widget.description'),
+            'options' => $this->getAvailableTemplates(static::TEMPLATE_NAMESPACE),
+            'validators' => array(
+                'required' => array(),
+            ),
         ));
 
         $form = $form->build();
@@ -97,7 +106,7 @@ class GoogleTagsWidget extends AbstractWidget {
             }
         }
 
-        $this->setTemplateView('cms/widget/google/properties', array(
+        $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
             'form' => $form->getView(),
         ));
     }

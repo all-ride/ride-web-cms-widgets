@@ -35,14 +35,6 @@ class RedirectWidget extends AbstractWidget {
     const PROPERTY_URL = 'url';
 
     /**
-     * Gets the templates of this widget
-     * @return array|null
-     */
-    public function getTemplates() {
-        return null;
-    }
-
-    /**
      * Redirects the current node
      * @return null
      */
@@ -150,7 +142,7 @@ class RedirectWidget extends AbstractWidget {
             }
         }
 
-        $view = $this->setTemplateView('cms/widget/redirect.properties', array(
+        $view = $this->setTemplateView('cms/widget/redirect/properties', array(
             'form' => $form->getView(),
         ));
         $view->addJavascript('js/cms/redirect.js');
