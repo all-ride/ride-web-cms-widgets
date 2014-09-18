@@ -22,10 +22,10 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
     const ICON = 'img/cms/widget/language-select.png';
 
     /**
-     * Path to the template of the widget view
+     * Namespace for the templates of this widget
      * @var string
      */
-    const TEMPLATE = 'cms/widget/language.select';
+    const TEMPLATE_NAMESPACE = 'cms/widget/language-select';
 
     /**
      * Sets a title view to the response
@@ -70,13 +70,60 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
             }
         }
 
-        $this->setTemplateView(static::TEMPLATE, array(
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
         	'locales' => $urls,
         ));
 
     	if ($this->properties->isAutoCache()) {
     	    $this->properties->setCache(true);
     	}
+    }
+
+    /**
+     * Action to handle and show the properties of this widget
+     * @return null
+     */
+    public function propertiesAction() {
+        $translator = $this->getTranslator();
+
+        $data = array(
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
+        );
+
+        $form = $this->createFormBuilder($data);
+        $form->addRow(self::PROPERTY_TEMPLATE, 'select', array(
+            'label' => $translator->translate('label.template'),
+            'description' => $translator->translate('label.template.widget.description'),
+            'options' => $this->getAvailableTemplates(static::TEMPLATE_NAMESPACE),
+            'validators' => array(
+                'required' => array(),
+            ),
+        ));
+
+        $form = $form->build();
+        if ($form->isSubmitted()) {
+            if ($this->request->getBodyParameter('cancel')) {
+                return false;
+            }
+
+            try {
+                $form->validate();
+
+                $data = $form->getData();
+
+                $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
+
+                return true;
+            } catch (ValidationException $exception) {
+                $this->setValidationException($exception, $form);
+            }
+        }
+
+        $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
+            'form' => $form->getView(),
+        ));
+
+        return false;
     }
 
     /**

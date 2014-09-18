@@ -20,31 +20,17 @@ class TemplateWidget extends AbstractWidget {
     const ICON = 'img/cms/widget/template.png';
 
     /**
-     * Path to the template resource of this widget
+     * Namespace for the templates of this widget
      * @var string
      */
-    const TEMPLATE = 'cms/widget/template/index';
-
-    /**
-     * Name of the template property
-     * @var string
-     */
-    const PROPERTY_TEMPLATE = 'template';
-
-    /**
-     * Gets the templates of this widget
-     * @return array
-     */
-    public function getTemplates() {
-        return array($this->getTemplate());
-    }
+    const TEMPLATE_NAMESPACE = 'cms/widget/template';
 
     /**
      * Sets a title view to the response
      * @return null
      */
     public function indexAction() {
-        $this->setTemplateView($this->getTemplate());
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'));
 
         if ($this->properties->isAutoCache()) {
             $this->properties->setCache(true);
@@ -58,6 +44,9 @@ class TemplateWidget extends AbstractWidget {
     public function getPropertiesPreview() {
         $translator = $this->getTranslator();
         $template = $this->getTemplate();
+        if (!$template) {
+            return '---';
+        }
 
         return $translator->translate('label.template') . ': ' . $template;
     }
@@ -70,14 +59,16 @@ class TemplateWidget extends AbstractWidget {
         $translator = $this->getTranslator();
 
         $data = array(
-            self::PROPERTY_TEMPLATE => $this->getTemplate(),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
         );
 
         $form = $this->createFormBuilder($data);
-        $form->addRow(self::PROPERTY_TEMPLATE, 'string', array(
+        $form->addRow(self::PROPERTY_TEMPLATE, 'select', array(
             'label' => $translator->translate('label.template'),
-            'filters' => array(
-                'trim' => array(),
+            'description' => $translator->translate('label.template.widget.description'),
+            'options' => $this->getAvailableTemplates(static::TEMPLATE_NAMESPACE),
+            'validators' => array(
+                'required' => array(),
             )
         ));
 
@@ -92,27 +83,19 @@ class TemplateWidget extends AbstractWidget {
 
                 $data = $form->getData();
 
-                $this->properties->setWidgetProperty(self::PROPERTY_TEMPLATE, $data[self::PROPERTY_TEMPLATE]);
+                $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
 
                 return true;
-            } catch (ValidationException $e) {
-
+            } catch (ValidationException $exception) {
+                $this->setValidationException($exception, $form);
             }
         }
 
-        $this->setTemplateView('cms/widget/template/properties', array(
+        $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
             'form' => $form->getView(),
         ));
 
         return false;
-    }
-
-    /**
-     * Gets the template for this widget
-     * @return string Relative path to the template resource
-     */
-    protected function getTemplate() {
-        return $this->properties->getWidgetProperty('template', static::TEMPLATE);
     }
 
 }

@@ -27,10 +27,10 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
     const ICON = 'img/cms/widget/files.png';
 
     /**
-     * Path to the template of the widget view
+     * Namespace for the templates of this widget
      * @var string
      */
-    const TEMPLATE = 'cms/widget/files/files';
+    const TEMPLATE_NAMESPACE = 'cms/widget/files';
 
     /**
      * Gets the routes for this widget
@@ -56,7 +56,7 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
             ));
         }
 
-        $this->setTemplateView(static::TEMPLATE, array(
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
             'title' => $title,
             'files' => $files,
         ));
@@ -91,7 +91,7 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
             return;
         }
 
-        $this->setDownloadView($file);
+        $this->setDownloadView($file, $file->getName());
     }
 
     /**
@@ -130,6 +130,7 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
         $data = array(
             'title' => $this->properties->getWidgetProperty('title.' . $this->locale),
             'files' => $this->getFiles(),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
         );
 
         $numFiles = count($data['files']);
@@ -147,6 +148,14 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
             'order' => true,
             'options' => array(
                 'component' => new FileComponent(),
+            ),
+        ));
+        $form->addRow(self::PROPERTY_TEMPLATE, 'select', array(
+            'label' => $translator->translate('label.template'),
+            'description' => $translator->translate('label.template.widget.description'),
+            'options' => $this->getAvailableTemplates(static::TEMPLATE_NAMESPACE),
+            'validators' => array(
+                'required' => array(),
             ),
         ));
 
@@ -184,13 +193,15 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
                     $index++;
                 }
 
+                $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
+
                 return true;
             } catch (ValidationException $exception) {
                 $this->setValidationException($exception, $form);
             }
         }
 
-        $view = $this->setTemplateView('cms/widget/files/properties', array(
+        $view = $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
             'form' => $form->getView(),
         ));
         $form->processView($view);

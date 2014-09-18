@@ -2,41 +2,63 @@
 
 namespace ride\web\cms\controller\widget;
 
+use ride\library\validation\exception\ValidationException;
+
 /**
- * Widget to show a table of contents of the text on the page
+ * Widget to add google analytics to your web page
  */
-class TextTocWidget extends AbstractWidget implements StyleWidget {
+class GoogleTagsWidget extends AbstractWidget {
 
     /**
      * Machine name of this widget
      * @var string
      */
-    const NAME = 'text.toc';
+    const NAME = 'google.tags';
 
     /**
      * Path to the icon of this widget
      * @var string
      */
-    const ICON = 'img/cms/widget/text.toc.png';
+    const ICON = 'img/cms/widget/google-tags.png';
 
     /**
      * Namespace for the templates of this widget
      * @var string
      */
-    const TEMPLATE_NAMESPACE = 'cms/widget/text-toc';
+    const TEMPLATE_NAMESPACE = 'cms/widget/google-tags';
 
     /**
-     * Sets a text index view to the response
+     * Sets the title view to the response
      * @return null
      */
     public function indexAction() {
-        $view = $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'));
-        $view->addJavascript('js/cms/text.toc.js');
-
-        if ($this->properties->isAutoCache()) {
-            $this->properties->setCache(true);
+        $code = $this->properties->getWidgetProperty('code');
+        if (!$code) {
+            return;
         }
+
+        $this->setTemplateView(self::TEMPLATE, array(
+            'code' => $code,
+        ));
     }
+
+    /**
+     * Get a preview of the properties of this widget
+     * @return string
+     */
+    public function getPropertiesPreview() {
+        $translator = $this->getTranslator();
+
+        $code = $this->properties->getWidgetProperty('code');
+        if ($code) {
+            $preview = '<strong>' . $translator->translate('label.code.google.tags') . '</strong>:' . $code . '<br/>>';
+        } else {
+            $preview = '---';
+        }
+
+        return $preview;
+    }
+
 
     /**
      * Action to handle and show the properties of this widget
@@ -46,10 +68,15 @@ class TextTocWidget extends AbstractWidget implements StyleWidget {
         $translator = $this->getTranslator();
 
         $data = array(
+            'code' => $this->properties->getWidgetProperty('code'),
             self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
         );
 
         $form = $this->createFormBuilder($data);
+        $form->addRow('code', 'string', array(
+            'label' => $translator->translate('label.code.google.tags'),
+            'description' => $translator->translate('label.code.google.tags.description'),
+        ));
         $form->addRow(self::PROPERTY_TEMPLATE, 'select', array(
             'label' => $translator->translate('label.template'),
             'description' => $translator->translate('label.template.widget.description'),
@@ -60,6 +87,7 @@ class TextTocWidget extends AbstractWidget implements StyleWidget {
         ));
 
         $form = $form->build();
+
         if ($form->isSubmitted()) {
             if ($this->request->getBodyParameter('cancel')) {
                 return false;
@@ -70,30 +98,16 @@ class TextTocWidget extends AbstractWidget implements StyleWidget {
 
                 $data = $form->getData();
 
-                $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
+                $this->properties->setWidgetProperty('code', $data['code']);
 
                 return true;
-            } catch (ValidationException $e) {
-                $this->response->setStatusCode(Response::STATUS_CODE_UNPROCESSABLE_ENTITY);
+            } catch (ValidationException $exception) {
+                $this->setValidationException($exception, $form);
             }
         }
 
         $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
             'form' => $form->getView(),
         ));
-
-        return false;
     }
-
-    /**
-     * Gets the options for the styles
-     * @return array Array with the name of the option as key and the
-     * translation key as value
-     */
-    public function getWidgetStyleOptions() {
-        return array(
-            'container' => 'label.widget.style.container',
-        );
-    }
-
 }

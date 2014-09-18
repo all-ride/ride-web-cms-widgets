@@ -27,10 +27,10 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
     const ICON = 'img/cms/widget/contact.png';
 
     /**
-     * Template resource for the form page
+     * Namespace for the templates of this widget
      * @var string
      */
-    const TEMPLATE = 'cms/widget/contact/form';
+    const TEMPLATE_NAMESPACE = 'cms/widget/contact';
 
     /**
      * Action to show and handle the contact form
@@ -107,7 +107,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
             }
         }
 
-        $this->setTemplateView(static::TEMPLATE, array(
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
             'form' => $form->getView(),
         ));
     }
@@ -149,6 +149,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
             'recipient' => $this->getRecipient(),
             'subject' => $this->getSubject(),
             'finishNode' => $this->properties->getWidgetProperty('finish.node'),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
         );
 
         $form = $this->createFormBuilder($data);
@@ -172,6 +173,13 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
             'description' => $translator->translate('label.node.finish.description'),
             'options' => $this->getNodeList($nodeModel),
         ));
+        $form->addRow(self::PROPERTY_TEMPLATE, 'select', array(
+            'label' => $translator->translate('label.template'),
+            'options' => $this->getAvailableTemplates(static::TEMPLATE_NAMESPACE),
+            'validators' => array(
+                'required' => array(),
+            ),
+        ));
 
         $form = $form->build();
         if ($form->isSubmitted()) {
@@ -184,13 +192,15 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
                 $this->properties->setWidgetProperty('subject.' . $this->locale, $data['subject']);
                 $this->properties->setWidgetProperty('finish.node', $data['finishNode']);
 
+                $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
+
                 return true;
-            } catch (ValidationException $e) {
-                $this->response->setStatusCode(Response::STATUS_CODE_UNPROCESSABLE_ENTITY);
+            } catch (ValidationException $exception) {
+                $this->setValidationException($exception, $form);
             }
         }
 
-        $this->setTemplateView('cms/widget/contact/properties', array(
+        $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
             'form' => $form->getView(),
         ));
 

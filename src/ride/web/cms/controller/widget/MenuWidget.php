@@ -23,10 +23,10 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
     const ICON = 'img/cms/widget/menu.png';
 
     /**
-     * Path to the template of the widget view
+     * Namespace for the templates of this widget
      * @var string
      */
-    const TEMPLATE = 'cms/widget/menu/menu';
+    const TEMPLATE_NAMESPACE = 'cms/widget/menu';
 
     /**
      * Default depth value of a menu widget
@@ -103,7 +103,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             $title = $parentNode->getName($this->locale);
         }
 
-        $this->setTemplateView(static::TEMPLATE, array(
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
             'title' => $title,
             'depth' => $depth,
             'nodeTypes' => $nodeModel->getNodeTypeManager()->getNodeTypes(),
@@ -174,6 +174,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             self::PROPERTY_PARENT => $this->getParent(false),
             self::PROPERTY_DEPTH => $this->getDepth(),
             self::PROPERTY_SHOW_TITLE => $this->getShowTitle(),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
         );
 
         $form = $this->createFormBuilder($data);
@@ -194,6 +195,13 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             'label' => $translator->translate('label.title.show'),
             'description' => $translator->translate('label.menu.title.show.description'),
         ));
+        $form->addRow(self::PROPERTY_TEMPLATE, 'select', array(
+            'label' => $translator->translate('label.template'),
+            'options' => $this->getAvailableTemplates(static::TEMPLATE_NAMESPACE),
+            'validators' => array(
+                'required' => array(),
+            ),
+        ));
 
         $form = $form->build();
         if ($form->isSubmitted()) {
@@ -210,13 +218,15 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
                 $this->properties->setWidgetProperty(self::PROPERTY_DEPTH, $data[self::PROPERTY_DEPTH]);
                 $this->properties->setWidgetProperty(self::PROPERTY_SHOW_TITLE, $data[self::PROPERTY_SHOW_TITLE]);
 
-                return true;
-            } catch (ValidationException $e) {
+                $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
 
+                return true;
+            } catch (ValidationException $exception) {
+                $this->setValidationException($exception, $form);
             }
         }
 
-        $this->setTemplateView('cms/widget/menu/properties', array(
+        $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
             'form' => $form->getView(),
         ));
 
