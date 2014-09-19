@@ -31,7 +31,7 @@ class BreadcrumbsWidget extends AbstractWidget implements StyleWidget {
      * @return null
      */
     public function indexAction() {
-        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'));
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'));
 
         if ($this->properties->isAutoCache()) {
             $this->properties->setCache(true);
@@ -46,7 +46,7 @@ class BreadcrumbsWidget extends AbstractWidget implements StyleWidget {
         $translator = $this->getTranslator();
 
         $data = array(
-            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
         $form = $this->createFormBuilder($data);

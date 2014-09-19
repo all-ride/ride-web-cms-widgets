@@ -56,7 +56,7 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
             ));
         }
 
-        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
             'title' => $title,
             'files' => $files,
         ));
@@ -130,7 +130,7 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
         $data = array(
             'title' => $this->properties->getWidgetProperty('title.' . $this->locale),
             'files' => $this->getFiles(),
-            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
         $numFiles = count($data['files']);

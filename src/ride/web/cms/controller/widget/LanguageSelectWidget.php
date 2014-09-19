@@ -70,7 +70,7 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
             }
         }
 
-        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
         	'locales' => $urls,
         ));
 
@@ -87,7 +87,7 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
         $translator = $this->getTranslator();
 
         $data = array(
-            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
         $form = $this->createFormBuilder($data);

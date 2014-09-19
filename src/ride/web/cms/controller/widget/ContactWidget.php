@@ -107,7 +107,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
             }
         }
 
-        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
             'form' => $form->getView(),
         ));
     }
@@ -149,7 +149,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
             'recipient' => $this->getRecipient(),
             'subject' => $this->getSubject(),
             'finishNode' => $this->properties->getWidgetProperty('finish.node'),
-            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
         $form = $this->createFormBuilder($data);
