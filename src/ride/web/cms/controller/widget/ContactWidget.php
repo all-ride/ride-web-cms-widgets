@@ -7,6 +7,8 @@ use ride\library\http\Response;
 use ride\library\mail\transport\Transport;
 use ride\library\validation\exception\ValidationException;
 
+use ride\web\form\component\HoneyPotComponent;
+use ride\web\form\exception\HoneyPotException;
 use ride\web\cms\controller\widget\AbstractWidget;
 
 /**
@@ -36,7 +38,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
      * Action to show and handle the contact form
      * @return null
      */
-    public function indexAction(Transport $transport) {
+    public function indexAction(HoneyPotComponent $honeyPotComponent, Transport $transport) {
         $recipient = $this->getRecipient();
         if (!$recipient) {
             return;
@@ -72,6 +74,10 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
                 'required' => array(),
             ),
         ));
+        $form->addRow('phone', 'component', array(
+            'component' => $honeyPotComponent,
+            'embed' => true,
+        ));
 
         $form = $form->build();
         if ($form->isSubmitted()) {
@@ -104,12 +110,16 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
                 return;
             } catch (ValidationException $exception) {
                 $this->setValidationException($exception, $form);
+            } catch (HoneyPotException $exception) {
+                $this->addError('error.honeypot');
             }
         }
 
-        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
+        $view = $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
             'form' => $form->getView(),
         ));
+
+        $form->processView($view);
     }
 
     /**
