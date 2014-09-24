@@ -30,7 +30,7 @@ class TextTocWidget extends AbstractWidget implements StyleWidget {
      * @return null
      */
     public function indexAction() {
-        $view = $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'));
+        $view = $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'));
         $view->addJavascript('js/cms/text.toc.js');
 
         if ($this->properties->isAutoCache()) {
@@ -46,7 +46,7 @@ class TextTocWidget extends AbstractWidget implements StyleWidget {
         $translator = $this->getTranslator();
 
         $data = array(
-            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
         $form = $this->createFormBuilder($data);
