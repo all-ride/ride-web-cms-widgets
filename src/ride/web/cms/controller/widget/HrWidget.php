@@ -29,7 +29,7 @@ class HrWidget extends AbstractWidget implements StyleWidget {
      * Action to render this widget
      */
     public function indexAction() {
-        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'));
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'));
     }
 
     /**
@@ -40,7 +40,7 @@ class HrWidget extends AbstractWidget implements StyleWidget {
         $translator = $this->getTranslator();
 
         $data = array(
-            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
         $form = $this->createFormBuilder($data);

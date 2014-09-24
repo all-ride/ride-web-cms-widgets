@@ -43,7 +43,7 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
             return;
         }
 
-       $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
+       $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
             'embed' => $embed,
         ));
 
@@ -74,7 +74,7 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
 
         $data = array(
             self::PROPERTY_EMBED => $this->properties->getWidgetProperty(self::PROPERTY_EMBED),
-            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
         $form = $this->createFormBuilder($data);

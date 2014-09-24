@@ -37,7 +37,7 @@ class GoogleAnalyticsWidget extends AbstractWidget {
             return;
         }
 
-        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
             'code' => $code,
         ));
     }
@@ -69,7 +69,7 @@ class GoogleAnalyticsWidget extends AbstractWidget {
 
         $data = array(
             'code' => $this->properties->getWidgetProperty('code'),
-            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
         $form = $this->createFormBuilder($data);

@@ -129,7 +129,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
             }
         }
 
-        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
             'text' => $text,
             'title' => $text->getTitle(),
             'subtitle' => $text->getSubtitle(),
@@ -210,7 +210,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
             self::PROPERTY_IMAGE => $text->getImage(),
             self::PROPERTY_IMAGE_ALIGNMENT => $text->getImageAlignment(),
             self::PROPERTY_CTA => $text->getCallToActions(),
-            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
         $data['title-use'] = $data[self::PROPERTY_TITLE] || $data[self::PROPERTY_SUBTITLE];
         $data['image-use'] = $data[self::PROPERTY_IMAGE];

@@ -103,7 +103,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             $title = $parentNode->getName($this->locale);
         }
 
-        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'), array(
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
             'title' => $title,
             'depth' => $depth,
             'nodeTypes' => $nodeModel->getNodeTypeManager()->getNodeTypes(),
@@ -174,7 +174,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             self::PROPERTY_PARENT => $this->getParent(false),
             self::PROPERTY_DEPTH => $this->getDepth(),
             self::PROPERTY_SHOW_TITLE => $this->getShowTitle(),
-            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/index'),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
         $form = $this->createFormBuilder($data);
