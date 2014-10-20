@@ -1,6 +1,8 @@
 {
     "align.left": "Left",
     "align.right": "Right",
+    "align.none": "None",
+    "align.justify": "Justify",
     "label.alignment.image": "Alignment",
     "label.code.google.analytics": "Tracking ID",
     "label.code.google.analytics.description": "A string like UA-000000-01 to identify your Google Analytics account",
