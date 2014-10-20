@@ -1,6 +1,8 @@
 {
     "align.left": "Links",
     "align.right": "Rechts",
+    "align.none": "Geen",
+    "align.justify": "Uitvullen",
     "label.alignment.image": "Uitlijning",
     "label.code.google.analytics": "Tracking-ID",
     "label.code.google.analytics.description": "Een tekenreeks zoals UA-000000-01 om je Google Analytics account te identificeren",
