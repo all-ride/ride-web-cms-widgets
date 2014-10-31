@@ -3,7 +3,8 @@
 namespace ride\web\cms\controller\widget;
 
 use ride\library\cms\node\Node;
-use ride\library\cms\node\NodeModel;
+
+use ride\web\cms\Cms;
 
 /**
  * Widget to show a menu of the node tree or a part thereof
@@ -83,10 +84,25 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
     const PROPERTY_SHOW_TITLE = 'title';
 
     /**
+     * Facade to the CMS
+     * @var \ride\web\cms\Cms
+     */
+    protected $cms;
+
+    /**
+     * Constructs a new menu widget
+     * @param \ride\web\cms\Cms $cms Facade of the CMS
+     * @return null;
+     */
+    public function __construct(Cms $cms) {
+        $this->cms = $cms;
+    }
+
+    /**
      * Sets a title view to the response
      * @return null
      */
-    public function indexAction(NodeModel $nodeModel) {
+    public function indexAction() {
         $parent = $this->getParent();
         $depth = $this->getDepth();
         $showTitle = $this->getShowTitle();
@@ -95,7 +111,8 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             return;
         }
 
-        $parentNode = $nodeModel->getNode($parent, null, true, $depth);
+        $node = $this->properties->getNode();
+        $parentNode = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $parent, null, true, $depth);
         $nodes = $parentNode->getChildren();
 
         $title = null;
@@ -106,7 +123,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
         $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
             'title' => $title,
             'depth' => $depth,
-            'nodeTypes' => $nodeModel->getNodeTypeManager()->getNodeTypes(),
+            'nodeTypes' => $this->cms->getNodeTypes(),
             'items' => $nodes,
         ));
 
@@ -127,8 +144,9 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
         $showTitle = $this->getShowTitle();
 
         if ($parent) {
-            $nodeModel = $this->dependencyInjector->get('ride\\library\\cms\\node\\NodeModel');
-            $parentNode = $nodeModel->getNode($parent);
+            $node = $this->properties->getNode();
+
+            $parentNode = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $parent);
             $parent = $parentNode->getName($this->locale);
         } else {
             $parent = '---';
@@ -146,16 +164,16 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
      * Action to handle and show the properties of this widget
      * @return null
      */
-    public function propertiesAction(NodeModel $nodeModel) {
+    public function propertiesAction() {
         $translator = $this->getTranslator();
 
         $node = $this->properties->getNode();
         $rootNodeId = $node->getRootNodeId();
-        $rootNode = $nodeModel->getNode($rootNodeId, null, true);
-        $levels = $nodeModel->getChildrenLevels($rootNode) - 1;
 
-        $nodeList = $nodeModel->getListFromNodes(array($rootNode), $this->locale, false);
-        $nodeList = array($rootNode->getId() => '/' . $rootNode->getName($this->locale)) + $nodeList;
+        $site = $this->cms->getNode($rootNodeId, $node->getRevision(), $rootNodeId, null, true);
+        $levels = $this->cms->getChildrenLevels($site) - 1;
+
+        $nodeList = $this->cms->getNodeList($site, $this->locale, true);
         $nodeList[self::PARENT_CURRENT] = $translator->translate('label.menu.parent.current');
         for ($i = 1; $i <= $levels; $i++) {
             $nodeList[self::PARENT_ABSOLUTE . $i] = $translator->translate('label.menu.parent.absolute', array('level' => $i));

@@ -2,7 +2,6 @@
 
 namespace ride\web\cms\controller\widget;
 
-
 /**
  * Widget to show the breadcrums of the current page
  */

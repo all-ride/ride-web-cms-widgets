@@ -326,6 +326,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         $url = $this->getUrl('cms.widget.properties', array(
             'locale' => $this->locale,
             'site' => $node->getRootNodeId(),
+            'revision' => $node->getRevision(),
             'node' => $node->getId(),
             'region' => $this->region,
             'widget' => $this->id,
