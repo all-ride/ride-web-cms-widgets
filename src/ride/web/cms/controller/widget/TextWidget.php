@@ -265,8 +265,10 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         $form->addRow(self::PROPERTY_IMAGE_ALIGNMENT, 'select', array(
             'label' => $translator->translate('label.alignment.image'),
             'options' => array(
+                Text::ALIGN_NONE => $translator->translate('align.none'),
                 Text::ALIGN_LEFT => $translator->translate('align.left'),
                 Text::ALIGN_RIGHT => $translator->translate('align.right'),
+                Text::ALIGN_JUSTIFY => $translator->translate('align.justify'),
             ),
         ));
         $form->addRow(self::PROPERTY_CTA, 'collection', array(

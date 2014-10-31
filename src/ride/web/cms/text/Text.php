@@ -20,6 +20,18 @@ interface Text {
     const ALIGN_RIGHT = 'right';
 
     /**
+     * No alignment
+     * @var string
+     */
+    const ALIGN_NONE = 'none';
+
+    /**
+     * Justify alignment
+     * @var string
+     */
+    const ALIGN_JUSTIFY = 'justify';
+
+    /**
      * Sets the name of the format
      * @param string $format Name of the format
      * @return null
