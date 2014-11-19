@@ -98,7 +98,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
 
                 $finish = $this->properties->getWidgetProperty('finish.node');
                 if ($finish) {
-                    $url = $this->getUrl('cms.front.' . $finish . '.' . $this->locale);
+                    $url = $this->getUrl('cms.front.' . $this->properties->getNode()->getRootNodeId() . '.' . $finish . '.' . $this->locale);
                 } else {
                     $url = $this->request->getUrl();
 
