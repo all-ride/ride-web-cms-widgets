@@ -105,6 +105,8 @@ class TextWidget extends AbstractWidget implements StyleWidget {
      * @return null
      */
     public function indexAction(NodeModel $nodeModel) {
+        $propertiesNode = $this->properties->getNode();
+
         $text = $this->getTextIO()->getText($this->properties, $this->locale);
         $textFormat = $this->getTextFormat($text->getFormat());
 
@@ -116,7 +118,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
 
             if ($node) {
                 try {
-                    $node = $nodeModel->getNode($node);
+                    $node = $nodeModel->getNode($propertiesNode->getRootNodeId(), $propertiesNode->getRevision(), $node);
 
                     $callToAction->setUrl($node->getUrl($this->locale, $this->request->getBaseUrl()));
                 } catch (NodeNotFoundException $exception) {
