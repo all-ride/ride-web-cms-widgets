@@ -173,7 +173,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
         $site = $this->cms->getNode($rootNodeId, $node->getRevision(), $rootNodeId, null, true);
         $levels = $this->cms->getChildrenLevels($site) - 1;
 
-        $nodeList = $this->cms->getNodeList($site, $this->locale, true);
+        $nodeList = $this->cms->getNodeList($site, $this->locale, true, true, false);
         $nodeList[self::PARENT_CURRENT] = $translator->translate('label.menu.parent.current');
         for ($i = 1; $i <= $levels; $i++) {
             $nodeList[self::PARENT_ABSOLUTE . $i] = $translator->translate('label.menu.parent.absolute', array('level' => $i));
