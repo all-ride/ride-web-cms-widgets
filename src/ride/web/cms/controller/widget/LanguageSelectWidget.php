@@ -139,8 +139,8 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
      */
     public function getWidgetStyleOptions() {
         return array(
-            'container' => 'label.widget.style.container',
-            'menu' => 'label.widget.style.menu',
+            'container' => 'label.style.container',
+            'menu' => 'label.style.menu',
         );
     }
 

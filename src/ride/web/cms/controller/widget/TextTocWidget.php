@@ -92,7 +92,7 @@ class TextTocWidget extends AbstractWidget implements StyleWidget {
      */
     public function getWidgetStyleOptions() {
         return array(
-            'container' => 'label.widget.style.container',
+            'container' => 'label.style.container',
         );
     }
 

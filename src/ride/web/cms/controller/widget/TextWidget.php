@@ -326,19 +326,8 @@ class TextWidget extends AbstractWidget implements StyleWidget {
             }
         }
 
-        $node = $this->properties->getNode();
-        $url = $this->getUrl('cms.widget.properties', array(
-            'locale' => $this->locale,
-            'site' => $node->getRootNodeId(),
-            'revision' => $node->getRevision(),
-            'node' => $node->getId(),
-            'region' => $this->region,
-            'widget' => $this->id,
-        ));
-
         // set view
         $view = $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
-            'action' => $url,
             'form' => $form->getView(),
             'io' => $io,
             'format' => $format,
@@ -409,9 +398,9 @@ class TextWidget extends AbstractWidget implements StyleWidget {
      */
     public function getWidgetStyleOptions() {
         return array(
-            'container' => 'label.widget.style.container',
-            'title' => 'label.widget.style.title',
-            'subtitle' => 'label.widget.style.subtitle',
+            'container' => 'label.style.container',
+            'title' => 'label.style.title',
+            'subtitle' => 'label.style.subtitle',
         );
     }
 

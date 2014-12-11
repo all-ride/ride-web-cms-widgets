@@ -314,9 +314,9 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
      */
     public function getWidgetStyleOptions() {
         return array(
-            'container' => 'label.widget.style.container',
-            'title' => 'label.widget.style.title',
-            'menu' => 'label.widget.style.menu',
+            'container' => 'label.style.container',
+            'title' => 'label.style.title',
+            'menu' => 'label.style.menu',
         );
     }
 
