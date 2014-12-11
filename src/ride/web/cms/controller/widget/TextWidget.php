@@ -409,9 +409,9 @@ class TextWidget extends AbstractWidget implements StyleWidget {
      */
     public function getWidgetStyleOptions() {
         return array(
-            'container' => 'label.widget.style.container',
-            'title' => 'label.widget.style.title',
-            'subtitle' => 'label.widget.style.subtitle',
+            'container' => 'label.style.container',
+            'title' => 'label.style.title',
+            'subtitle' => 'label.style.subtitle',
         );
     }
 
