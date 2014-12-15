@@ -166,14 +166,16 @@ class TextWidget extends AbstractWidget implements StyleWidget {
             $body = StringHelper::truncate($bodyStripped, 120);
         }
 
+        $translator = $this->getTranslator();
         $preview = '';
 
         if ($title) {
-            $preview .= '<strong>' . $title . '</strong><br>';
+            $preview .= '<strong>' . $translator->translate('label.title') . '</strong>: ' . $title . '<br>';
         }
         if ($subtitle) {
-            $preview .= '<strong><em>' . $subtitle . '</em></strong><br>';
+            $preview .= '<strong>' . $translator->translate('label.subtitle') . '</strong>: ' . $subtitle . '<br>';
         }
+        $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default') . '<br>';
 
         $preview .= $body;
 

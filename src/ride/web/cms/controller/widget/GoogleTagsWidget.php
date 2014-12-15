@@ -37,7 +37,7 @@ class GoogleTagsWidget extends AbstractWidget {
             return;
         }
 
-        $this->setTemplateView(self::TEMPLATE, array(
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
             'code' => $code,
         ));
     }
@@ -48,17 +48,17 @@ class GoogleTagsWidget extends AbstractWidget {
      */
     public function getPropertiesPreview() {
         $translator = $this->getTranslator();
+        $preview = '';
 
         $code = $this->properties->getWidgetProperty('code');
         if ($code) {
-            $preview = '<strong>' . $translator->translate('label.code.google.tags') . '</strong>:' . $code . '<br/>>';
-        } else {
-            $preview = '---';
+            $preview .= '<strong>' . $translator->translate('label.code.google.tags') . '</strong>:' . $code . '<br>';
         }
+
+        $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default') . '<br>';
 
         return $preview;
     }
-
 
     /**
      * Action to handle and show the properties of this widget

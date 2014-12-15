@@ -99,12 +99,14 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
      * @return string
      */
     public function getPropertiesPreview() {
+        $translator = $this->getTranslator();
         $preview = '';
 
         $title = $this->properties->getWidgetProperty('title.' . $this->locale);
         if ($title) {
-            $preview .= '<strong>' . $title . '</strong><br>';
+            $preview .= '<strong>' . $translator->translate('label.title') . '</strong>: ' . $title . '<br>';
         }
+        $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default') . '<br>';
 
         $files = $this->getFiles();
         if ($files) {

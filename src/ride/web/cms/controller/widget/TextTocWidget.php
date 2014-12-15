@@ -39,6 +39,18 @@ class TextTocWidget extends AbstractWidget implements StyleWidget {
     }
 
     /**
+     * Gets a preview of the properties of this widget instance
+     * @return string
+     */
+    public function getPropertiesPreview() {
+        $translator = $this->getTranslator();
+
+        $preview = '<strong>' . $translator->translate('label.template') . '</strong>: ' . $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default') . '<br />';
+
+        return $preview;
+    }
+
+    /**
      * Action to handle and show the properties of this widget
      * @return null
      */

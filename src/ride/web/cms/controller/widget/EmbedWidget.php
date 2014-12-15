@@ -58,11 +58,14 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
      */
     public function getPropertiesPreview() {
         $embed = $this->properties->getWidgetProperty(self::PROPERTY_EMBED);
-        if (!$embed) {
-            return '---';
-        }
 
-        return StringHelper::truncate(htmlentities($embed), 120);
+        $translator = $this->getTranslator();
+        $preview = '';
+
+        $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default') . '<br>';
+        $preview .= StringHelper::truncate(htmlentities($embed), 120) . '<br>';
+
+        return $preview;
     }
 
     /**
