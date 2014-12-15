@@ -43,12 +43,10 @@ class TemplateWidget extends AbstractWidget {
      */
     public function getPropertiesPreview() {
         $translator = $this->getTranslator();
-        $template = $this->getTemplate();
-        if (!$template) {
-            return '---';
-        }
 
-        return $translator->translate('label.template') . ': ' . $template;
+        $preview = '<strong>' . $translator->translate('label.template') . '</strong>: ' . $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default') . '<br>';
+
+        return $preview;
     }
 
     /**

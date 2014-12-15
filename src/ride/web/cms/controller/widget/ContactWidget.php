@@ -132,18 +132,20 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
 
         $recipient = $this->getRecipient();
         if ($recipient) {
-            $preview .= '<strong>' . $translator->translate('label.recipient') . '</strong>: ' . $recipient . '<br />';
+            $preview .= '<strong>' . $translator->translate('label.recipient') . '</strong>: ' . $recipient . '<br>';
         }
 
         $subject = $this->getSubject();
         if ($subject) {
-            $preview .= '<strong>' . $translator->translate('label.subject') . '</strong>: ' . $subject . '<br />';
+            $preview .= '<strong>' . $translator->translate('label.subject') . '</strong>: ' . $subject . '<br>';
         }
 
         $finish = $this->properties->getWidgetProperty('finish.node');
         if ($finish) {
-            $preview .= '<strong>' . $translator->translate('label.node.finish') . '</strong>: ' . $finish . '<br />';
+            $preview .= '<strong>' . $translator->translate('label.node.finish') . '</strong>: ' . $finish . '<br>';
         }
+
+        $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default') . '<br>';
 
         return $preview;
     }

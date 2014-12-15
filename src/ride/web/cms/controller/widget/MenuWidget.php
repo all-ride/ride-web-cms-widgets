@@ -153,9 +153,10 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
         }
 
         $preview = '';
-        $preview .= $translator->translate('label.menu.parent') . ': ' . $parent . '<br />';
-        $preview .= $translator->translate('label.menu.depth') . ': ' . $depth . '<br />';
-        $preview .= $translator->translate('label.title.show') . ': ' . $translator->translate($showTitle ? 'label.yes' : 'label.no') . '<br />';
+        $preview .= '<strong>' . $translator->translate('label.menu.parent') . '</strong>: ' . $parent . '<br>';
+        $preview .= '<strong>' . $translator->translate('label.menu.depth') . '</strong>: ' . $depth . '<br>';
+        $preview .= '<strong>' . $translator->translate('label.title.show') . '</strong>: ' . $translator->translate($showTitle ? 'label.yes' : 'label.no') . '<br>';
+        $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default') . '<br>';
 
         return $preview;
     }
