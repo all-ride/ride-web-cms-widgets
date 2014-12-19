@@ -2,7 +2,7 @@
 
 namespace ride\web\cms\controller\widget;
 
-use ride\library\cms\node\exception\NodeNotFoundException;
+use ride\library\cms\exception\NodeNotFoundException;
 use ride\library\cms\node\NodeModel;
 use ride\library\i18n\I18n;
 use ride\library\validation\exception\ValidationException;
