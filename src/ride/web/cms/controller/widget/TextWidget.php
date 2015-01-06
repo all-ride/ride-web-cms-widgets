@@ -329,11 +329,24 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         }
 
         // set view
+        $node = $this->properties->getNode();
+        $action = $this->getUrl('cms.node.content.widget.properties', array(
+            'locale' => $this->locale,
+            'site' => $node->getRootNodeId(),
+        	'revision' => $node->getRevision(),
+        	'node' => $node->getId(),
+        	'region' => $this->region,
+        	'section' => $this->section,
+        	'block' => $this->block,
+            'widget' => $this->id,
+        ));
+
         $view = $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
             'form' => $form->getView(),
             'io' => $io,
             'format' => $format,
             'text' => $text,
+            'action' => $action,
         ));
         $view->addJavascript('js/cms/text.js');
 
