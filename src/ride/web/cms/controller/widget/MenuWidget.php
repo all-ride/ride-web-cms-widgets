@@ -2,6 +2,7 @@
 
 namespace ride\web\cms\controller\widget;
 
+use ride\library\cms\exception\NodeNotFoundException;
 use ride\library\cms\node\Node;
 
 use ride\web\cms\Cms;
@@ -112,7 +113,12 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
         }
 
         $node = $this->properties->getNode();
-        $parentNode = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $parent, null, true, $depth);
+        try {
+            $parentNode = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $parent, null, true, $depth);
+        } catch (NodeNotFoundException $exception) {
+            return;
+        }
+
         $nodes = $parentNode->getChildren();
 
         $title = null;
@@ -146,8 +152,12 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
         if ($parent) {
             $node = $this->properties->getNode();
 
-            $parentNode = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $parent);
-            $parent = $parentNode->getName($this->locale);
+            try {
+                $parentNode = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $parent);
+                $parent = $parentNode->getName($this->locale);
+            } catch (NodeNotFoundException $exception) {
+                $parent = 'unexistant';
+            }
         } else {
             $parent = '---';
         }
