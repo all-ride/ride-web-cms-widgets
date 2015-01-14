@@ -39,16 +39,24 @@ class RedirectWidget extends AbstractWidget {
      * @return null
      */
     public function indexAction(NodeModel $nodeModel) {
+        $node = $this->properties->getNode();
+
         $url = $this->getRedirectUrl();
         if ($url) {
-            $url = $this->properties->getNode()->resolveUrl($this->locale, $this->request->getBaseScript(), $url);
+            $url = $node->resolveUrl($this->locale, $this->request->getBaseScript(), $url);
         } else {
             $nodeId = $this->properties->getWidgetProperty(self::PROPERTY_NODE);
             if (!$nodeId) {
                 return;
             }
 
-            $node = $nodeModel->getNode($nodeId);
+            try {
+                $node = $nodeModel->getNode($node->getRootNodeId(), $node->getRevision(), $nodeId);
+            } catch (NodeNotFoundException $exception) {
+                $this->getLog()->logException($exception);
+
+                return;
+            }
 
             $url = $node->getUrl($this->locale, $this->request->getBaseScript());
         }
@@ -72,12 +80,15 @@ class RedirectWidget extends AbstractWidget {
             if ($nodeId) {
                 $nodeModel = $this->dependencyInjector->get('ride\\library\\cms\\node\\NodeModel');
                 try {
-                    $node = $nodeModel->getNode($nodeId);
+                    $node = $this->properties->getNode();
+                    $node = $nodeModel->getNode($node->getRootNodeId(), $node->getRevision(), $nodeId);
 
-                    $preview = $translator->translate('label.node') . ': ' . $node->getName($this->locale);
+                    $node = $node->getName($this->locale);
                 } catch (NodeNotFoundException $exception) {
-
+                    $node = '---';
                 }
+
+                $preview = $translator->translate('label.node') . ': ' . $node;
             }
         }
 

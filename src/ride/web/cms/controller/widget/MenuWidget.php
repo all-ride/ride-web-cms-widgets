@@ -116,6 +116,8 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
         try {
             $parentNode = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $parent, null, true, $depth);
         } catch (NodeNotFoundException $exception) {
+            $this->getLog()->logException($exception);
+
             return;
         }
 

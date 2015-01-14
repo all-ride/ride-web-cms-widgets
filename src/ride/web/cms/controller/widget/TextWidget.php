@@ -122,6 +122,8 @@ class TextWidget extends AbstractWidget implements StyleWidget {
 
                     $callToAction->setUrl($node->getUrl($this->locale, $this->request->getBaseUrl()));
                 } catch (NodeNotFoundException $exception) {
+                    $this->getLog()->logException($exception);
+
                     unset($callToActions[$index]);
                 }
             } elseif ($url) {
@@ -246,15 +248,24 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         $form->addRow('title-use', 'option', array(
             'label' => ' ',
             'description' => $translator->translate('label.title.use'),
+            'attributes' => array(
+                'data-toggle-dependant' => 'option-title',
+            ),
         ));
         $form->addRow(self::PROPERTY_TITLE, 'string', array(
             'label' => $translator->translate('label.title'),
+            'attributes' => array(
+                'class' => 'option-title option-title-1',
+            ),
             'filters' => array(
                 'trim' => array(),
             ),
         ));
         $form->addRow(self::PROPERTY_SUBTITLE, 'string', array(
             'label' => $translator->translate('label.subtitle'),
+            'attributes' => array(
+                'class' => 'option-title option-title-1',
+            ),
             'filters' => array(
                 'trim' => array(),
             ),
@@ -262,12 +273,21 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         $form->addRow('image-use', 'option', array(
             'label' => ' ',
             'description' => $translator->translate('label.image.use'),
+            'attributes' => array(
+                'data-toggle-dependant' => 'option-image',
+            ),
         ));
         $form->addRow(self::PROPERTY_IMAGE, 'image', array(
             'label' => $translator->translate('label.image'),
+            'attributes' => array(
+                'class' => 'option-image option-image-1',
+            ),
         ));
         $form->addRow(self::PROPERTY_IMAGE_ALIGNMENT, 'select', array(
             'label' => $translator->translate('label.alignment.image'),
+            'attributes' => array(
+                'class' => 'option-image option-image-1',
+            ),
             'options' => array(
                 Text::ALIGN_NONE => $translator->translate('align.none'),
                 Text::ALIGN_LEFT => $translator->translate('align.left'),
@@ -350,6 +370,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         ));
         $view->addJavascript('js/cms/text.js');
 
+        $io->processFormView($this->properties, $translator, $text, $view);
         $form->processView($view);
 
         return false;
