@@ -4,6 +4,7 @@ namespace ride\web\cms\text\io;
 
 use ride\library\form\FormBuilder;
 use ride\library\i18n\translator\Translator;
+use ride\library\mvc\view\View;
 use ride\library\widget\WidgetProperties;
 
 use ride\web\cms\text\Text;
@@ -40,6 +41,18 @@ interface TextIO {
      * @return null
      */
     public function processFormData(Text $text, array &$data);
+
+    /**
+     * Hook to process the form view
+     * @param \ride\library\widget\WidgetProperties $widgetProperties Instance
+     * of the widget properties
+     * @param \ride\library\i18n\translator\Translator $translator Instance of
+     * the translator
+     * @param \ride\web\cms\text\Text $text Instance of the text
+     * @param \ride\library\mvc\view\View $view Instance of the properties view
+     * @return null
+     */
+    public function processFormView(WidgetProperties $widgetProperties, Translator $translator, Text $text, View $view);
 
     /**
      * Stores the text in the data source
