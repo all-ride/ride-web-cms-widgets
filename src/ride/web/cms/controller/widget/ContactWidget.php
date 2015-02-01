@@ -46,9 +46,21 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
 
         $translator = $this->getTranslator();
 
+        $attributes = array(
+            'name' => array(),
+            'email' => array(),
+            'message' => array(),
+        );
+        if ($this->properties->getWidgetProperty('compact')) {
+            $attributes['name']['placeholder'] = $translator->translate('label.name');
+            $attributes['email']['placeholder'] = $translator->translate('label.email');
+            $attributes['message']['placeholder'] = $translator->translate('label.message');
+        }
+
         $form = $this->createFormBuilder();
         $form->addRow('name', 'string', array(
             'label' => $translator->translate('label.name'),
+            'attributes' => $attributes['name'],
             'filters' => array(
                 'trim' => array(),
             ),
@@ -58,6 +70,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         ));
         $form->addRow('email', 'email', array(
             'label' => $translator->translate('label.email'),
+            'attributes' => $attributes['email'],
             'filters' => array(
                 'trim' => array(),
             ),
@@ -67,6 +80,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         ));
         $form->addRow('message', 'text', array(
             'label' => $translator->translate('label.message'),
+            'attributes' => $attributes['message'],
             'filters' => array(
                 'trim' => array(),
             ),
