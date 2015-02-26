@@ -101,6 +101,12 @@ class TextWidget extends AbstractWidget implements StyleWidget {
     const TEMPLATE_NAMESPACE = 'cms/widget/text';
 
     /**
+     * Default template of this widget
+     * @var string
+     */
+    const TEMPLATE_DEFAULT = 'default';
+
+    /**
      * Sets a text view to the response
      * @return null
      */
@@ -133,7 +139,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
             }
         }
 
-        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/' . static::TEMPLATE_DEFAULT), array(
             'text' => $text,
             'title' => $text->getTitle(),
             'subtitle' => $text->getSubtitle(),
