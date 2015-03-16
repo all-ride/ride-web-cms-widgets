@@ -41,7 +41,7 @@ class RedirectWidget extends AbstractWidget {
     public function indexAction(NodeModel $nodeModel) {
         $node = $this->properties->getNode();
 
-        $url = $this->getRedirectUrl();
+        $url = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_URL);
         if ($url) {
             $url = $node->resolveUrl($this->locale, $this->request->getBaseScript(), $url);
         } else {
@@ -72,7 +72,7 @@ class RedirectWidget extends AbstractWidget {
         $translator = $this->getTranslator();
         $preview = '---';
 
-        $url = $this->getRedirectUrl();
+        $url = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_URL);
         if ($url) {
             $preview = $translator->translate('label.url') . ': ' . $url;
         } else {
@@ -105,7 +105,7 @@ class RedirectWidget extends AbstractWidget {
 
         $data = array(
             self::PROPERTY_NODE => $this->properties->getWidgetProperty(self::PROPERTY_NODE),
-            self::PROPERTY_URL => $this->getRedirectUrl(),
+            self::PROPERTY_URL => $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_URL),
         );
 
         if ($data[self::PROPERTY_URL]) {
@@ -117,9 +117,13 @@ class RedirectWidget extends AbstractWidget {
         $form = $this->createFormBuilder($data);
         $form->setId('form-redirect');
         $form->addRow('type', 'option', array(
+            'label' => $translator->translate('label.type'),
             'options' => array(
                 'url' => $translator->translate('label.url'),
                 'node' => $translator->translate('label.node'),
+            ),
+            'attributes' => array(
+                'data-toggle-dependant' => 'option-type',
             ),
             'validators' => array(
                 'required' => array(),
@@ -128,9 +132,15 @@ class RedirectWidget extends AbstractWidget {
         $form->addRow(self::PROPERTY_NODE, 'select', array(
             'label' => $translator->translate('label.node'),
             'options' => $nodeList,
+            'attributes' => array(
+                'class' => 'option-type option-type-node',
+            ),
         ));
         $form->addRow(self::PROPERTY_URL, 'string', array(
             'label' => $translator->translate('label.url'),
+            'attributes' => array(
+                'class' => 'option-type option-type-url',
+            ),
         ));
 
         $form = $form->build();
@@ -145,7 +155,7 @@ class RedirectWidget extends AbstractWidget {
                 $data = $form->getData();
 
                 $this->properties->setWidgetProperty(self::PROPERTY_NODE, $data[self::PROPERTY_NODE]);
-                $this->properties->setWidgetProperty(self::PROPERTY_URL . '.' . $this->locale, $data[self::PROPERTY_URL]);
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_URL, $data[self::PROPERTY_URL]);
 
                 return true;
             } catch (ValidationException $e) {
@@ -156,22 +166,10 @@ class RedirectWidget extends AbstractWidget {
         $view = $this->setTemplateView('cms/widget/redirect/properties', array(
             'form' => $form->getView(),
         ));
-        $view->addJavascript('js/cms/redirect.js');
+
+        $form->processView($view);
 
         return false;
-    }
-
-    /**
-     * Gets the URL from the widget properties
-     * @return string|null
-     */
-    protected function getRedirectUrl() {
-        $url = $this->properties->getWidgetProperty(self::PROPERTY_URL . '.' . $this->locale);
-        if (!$url) {
-            $url = $this->properties->getWidgetProperty(self::PROPERTY_URL);
-        }
-
-        return $url;
     }
 
 }

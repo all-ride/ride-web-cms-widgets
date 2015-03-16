@@ -35,12 +35,12 @@ class PropertiesTextIO extends AbstractTextIO {
         }
 
         foreach ($locales as $locale) {
-            $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_FORMAT . '.' . $locale, $text->getFormat());
-            $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_TITLE . '.' . $locale, $data[TextWidget::PROPERTY_TITLE]);
-            $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_SUBTITLE . '.' . $locale, $data[TextWidget::PROPERTY_SUBTITLE]);
-            $widgetProperties->setWidgetProperty(TextWidget::PROPERTY_BODY . '.' . $locale, $data[TextWidget::PROPERTY_BODY]);
-            $widgetProperties->setWidgetProperty(str_replace('-', '.', TextWidget::PROPERTY_IMAGE) . '.' . $locale, $data[TextWidget::PROPERTY_IMAGE]);
-            $widgetProperties->setWidgetProperty(str_replace('-', '.', TextWidget::PROPERTY_IMAGE_ALIGNMENT) . '.' . $locale, $data[TextWidget::PROPERTY_IMAGE_ALIGNMENT]);
+            $widgetProperties->setLocalizedWidgetProperty($locale, TextWidget::PROPERTY_FORMAT, $text->getFormat());
+            $widgetProperties->setLocalizedWidgetProperty($locale, TextWidget::PROPERTY_TITLE, $data[TextWidget::PROPERTY_TITLE]);
+            $widgetProperties->setLocalizedWidgetProperty($locale, TextWidget::PROPERTY_SUBTITLE, $data[TextWidget::PROPERTY_SUBTITLE]);
+            $widgetProperties->setLocalizedWidgetProperty($locale, TextWidget::PROPERTY_BODY, $data[TextWidget::PROPERTY_BODY]);
+            $widgetProperties->setLocalizedWidgetProperty($locale, str_replace('-', '.', TextWidget::PROPERTY_IMAGE), $data[TextWidget::PROPERTY_IMAGE]);
+            $widgetProperties->setLocalizedWidgetProperty($locale, str_replace('-', '.', TextWidget::PROPERTY_IMAGE_ALIGNMENT), $data[TextWidget::PROPERTY_IMAGE_ALIGNMENT]);
 
             $widgetProperties->clearWidgetProperties(TextWidget::PROPERTY_CTA . '.' . $locale);
 
@@ -83,12 +83,12 @@ class PropertiesTextIO extends AbstractTextIO {
         }
 
         $text = new GenericText();
-        $text->setFormat($widgetProperties->getWidgetProperty(TextWidget::PROPERTY_FORMAT . '.' . $locale));
-        $text->setTitle($widgetProperties->getWidgetProperty(TextWidget::PROPERTY_TITLE . '.' . $locale));
-        $text->setSubtitle($widgetProperties->getWidgetProperty(TextWidget::PROPERTY_SUBTITLE . '.' . $locale));
-        $text->setBody($widgetProperties->getWidgetProperty(TextWidget::PROPERTY_BODY . '.' . $locale));
-        $text->setImage($widgetProperties->getWidgetProperty(str_replace('-', '.', TextWidget::PROPERTY_IMAGE) . '.' . $locale));
-        $text->setImageAlignment($widgetProperties->getWidgetProperty(str_replace('-', '.', TextWidget::PROPERTY_IMAGE_ALIGNMENT) . '.' . $locale));
+        $text->setFormat($widgetProperties->getLocalizedWidgetProperty($locale, TextWidget::PROPERTY_FORMAT));
+        $text->setTitle($widgetProperties->getLocalizedWidgetProperty($locale, TextWidget::PROPERTY_TITLE));
+        $text->setSubtitle($widgetProperties->getLocalizedWidgetProperty($locale, TextWidget::PROPERTY_SUBTITLE));
+        $text->setBody($widgetProperties->getLocalizedWidgetProperty($locale, TextWidget::PROPERTY_BODY));
+        $text->setImage($widgetProperties->getLocalizedWidgetProperty($locale, str_replace('-', '.', TextWidget::PROPERTY_IMAGE)));
+        $text->setImageAlignment($widgetProperties->getLocalizedWidgetProperty($locale, str_replace('-', '.', TextWidget::PROPERTY_IMAGE_ALIGNMENT)));
         $text->setCallToActions($callToActions);
 
         return $text;

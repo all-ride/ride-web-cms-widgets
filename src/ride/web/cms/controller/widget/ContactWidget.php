@@ -29,6 +29,24 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
     const ICON = 'img/cms/widget/contact.png';
 
     /**
+     * Name of the recipient property
+     * @var string
+     */
+    const PROPERTY_RECIPIENT = 'recipient';
+
+    /**
+     * Name of the subject property
+     * @var string
+     */
+    const PROPERTY_SUBJECT = 'subject';
+
+    /**
+     * Name of the finish node property
+     * @var string
+     */
+    const PROPERTY_FINISH_NODE = 'finish.node';
+
+    /**
      * Namespace for the templates of this widget
      * @var string
      */
@@ -39,7 +57,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
      * @return null
      */
     public function indexAction(HoneyPotComponent $honeyPotComponent, Transport $transport) {
-        $recipient = $this->getRecipient();
+        $recipient = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_RECIPIENT);
         if (!$recipient) {
             return;
         }
@@ -110,7 +128,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
 
                 $transport->send($message);
 
-                $finish = $this->properties->getWidgetProperty('finish.node');
+                $finish = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_FINISH_NODE);
                 if ($finish) {
                     $url = $this->getUrl('cms.front.' . $this->properties->getNode()->getRootNodeId() . '.' . $finish . '.' . $this->locale);
                 } else {
@@ -144,7 +162,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         $translator = $this->getTranslator();
         $preview = '';
 
-        $recipient = $this->getRecipient();
+        $recipient = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_RECIPIENT);
         if ($recipient) {
             $preview .= '<strong>' . $translator->translate('label.recipient') . '</strong>: ' . $recipient . '<br>';
         }
@@ -154,7 +172,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
             $preview .= '<strong>' . $translator->translate('label.subject') . '</strong>: ' . $subject . '<br>';
         }
 
-        $finish = $this->properties->getWidgetProperty('finish.node');
+        $finish = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_FINISH_NODE);
         if ($finish) {
             $preview .= '<strong>' . $translator->translate('label.node.finish') . '</strong>: ' . $finish . '<br>';
         }
@@ -172,14 +190,14 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         $translator = $this->getTranslator();
 
         $data = array(
-            'recipient' => $this->getRecipient(),
-            'subject' => $this->getSubject(),
-            'finishNode' => $this->properties->getWidgetProperty('finish.node'),
+            self::PROPERTY_RECIPIENT => $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_RECIPIENT),
+            self::PROPERTY_SUBJECT => $this->getSubject(),
+            'finishNode' => $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_FINISH_NODE),
             self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
         $form = $this->createFormBuilder($data);
-        $form->addRow('recipient', 'email', array(
+        $form->addRow(self::PROPERTY_RECIPIENT, 'email', array(
             'label' => $translator->translate('label.recipient'),
             'filters' => array(
                 'trim' => array(),
@@ -188,7 +206,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
                 'required' => array(),
             ),
         ));
-        $form->addRow('subject', 'string', array(
+        $form->addRow(self::PROPERTY_SUBJECT, 'string', array(
             'label' => $translator->translate('label.subject'),
             'filters' => array(
                 'trim' => array(),
@@ -214,9 +232,9 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
 
                 $data = $form->getData();
 
-                $this->properties->setWidgetProperty('recipient.' . $this->locale, $data['recipient']);
-                $this->properties->setWidgetProperty('subject.' . $this->locale, $data['subject']);
-                $this->properties->setWidgetProperty('finish.node', $data['finishNode']);
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_RECIPIENT, $data[self::PROPERTY_RECIPIENT]);
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_SUBJECT, $data[self::PROPERTY_SUBJECT]);
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_FINISH_NODE, $data['finishNode']);
 
                 $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
 
@@ -234,29 +252,12 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
     }
 
     /**
-     * Gets the recipient for the message
-     * @return string
-     */
-    protected function getRecipient() {
-        $recipient = $this->properties->getWidgetProperty('recipient.' . $this->locale);
-        if (!$recipient) {
-            $recipient = $this->properties->getWidgetProperty('recipient');
-        }
-
-        return $recipient;
-    }
-
-    /**
      * Gets the subject for the message
      * @param boolean $useDefault Set to true to return a default subject
      * @return string
      */
     protected function getSubject($useDefault = false) {
-        $subject = $this->properties->getWidgetProperty('subject.' . $this->locale);
-        if (!$subject) {
-            $subject = $this->properties->getWidgetProperty('subject');
-        }
-
+        $subject = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_SUBJECT);
         if (!$subject && $useDefault) {
             $subject = 'Message from ' . $this->properties->getNode()->getRootNode()->getName($this->locale);
         }
