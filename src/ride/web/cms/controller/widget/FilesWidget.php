@@ -27,6 +27,12 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
     const ICON = 'img/cms/widget/files.png';
 
     /**
+     * Name of the files property
+     * @var string
+     */
+    const PROPERTY_FILES = 'files';
+
+    /**
      * Namespace for the templates of this widget
      * @var string
      */
@@ -47,7 +53,7 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
      * @return null
      */
     public function indexAction() {
-        $title = $this->properties->getWidgetProperty('title.' . $this->locale);
+        $title = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE);
         $files = $this->getFiles();
         foreach ($files as $fileId => $file) {
             $files[$fileId]['url'] = $this->getUrl('download', array(
@@ -102,7 +108,7 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
         $translator = $this->getTranslator();
         $preview = '';
 
-        $title = $this->properties->getWidgetProperty('title.' . $this->locale);
+        $title = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE);
         if ($title) {
             $preview .= '<strong>' . $translator->translate('label.title') . '</strong>: ' . $title . '<br>';
         }
@@ -130,21 +136,21 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
         $translator = $this->getTranslator();
 
         $data = array(
-            'title' => $this->properties->getWidgetProperty('title.' . $this->locale),
-            'files' => $this->getFiles(),
+            self::PROPERTY_TITLE => $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE),
+            self::PROPERTY_FILES => $this->getFiles(),
             self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
         $numFiles = count($data['files']);
 
         $form = $this->createFormBuilder($data);
-        $form->addRow('title', 'string', array(
+        $form->addRow(self::PROPERTY_TITLE, 'string', array(
             'label' => $translator->translate('label.title'),
             'filters' => array(
                 'trim' => array(),
             ),
         ));
-        $form->addRow('files', 'collection', array(
+        $form->addRow(self::PROPERTY_FILES, 'collection', array(
             'label' => $translator->translate('label.files'),
             'type' => 'component',
             'order' => true,
@@ -172,25 +178,25 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
 
                 $data = $form->getData();
 
-                $this->properties->setWidgetProperty('title.' . $this->locale, $data['title']);
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE, $data[self::PROPERTY_TITLE]);
 
                 $index = 1;
-                foreach ($data['files'] as $file) {
+                foreach ($data[self::PROPERTY_FILES] as $file) {
                     if (!$file['label']) {
                         $file['label'] = substr($file['file'], strrpos($file['file'], '/') + 1);
                     }
 
-                    $this->properties->setWidgetProperty('files.' . $this->locale . '.' . $index . '.file', $file['file']);
-                    $this->properties->setWidgetProperty('files.' . $this->locale . '.' . $index . '.label', $file['label']);
-                    $this->properties->setWidgetProperty('files.' . $this->locale . '.' . $index . '.image', $file['image']);
+                    $this->properties->setWidgetProperty(self::PROPERTY_FILES . '.' . $this->locale . '.' . $index . '.file', $file['file']);
+                    $this->properties->setWidgetProperty(self::PROPERTY_FILES . '.' . $this->locale . '.' . $index . '.label', $file['label']);
+                    $this->properties->setWidgetProperty(self::PROPERTY_FILES . '.' . $this->locale . '.' . $index . '.image', $file['image']);
 
                     $index++;
                 }
 
                 while ($index <= $numFiles) {
-                    $this->properties->setWidgetProperty('files.' . $this->locale . '.' . $index . '.file', null);
-                    $this->properties->setWidgetProperty('files.' . $this->locale . '.' . $index . '.label', null);
-                    $this->properties->setWidgetProperty('files.' . $this->locale . '.' . $index . '.image', null);
+                    $this->properties->setWidgetProperty(self::PROPERTY_FILES . '.' . $this->locale . '.' . $index . '.file', null);
+                    $this->properties->setWidgetProperty(self::PROPERTY_FILES . '.' . $this->locale . '.' . $index . '.label', null);
+                    $this->properties->setWidgetProperty(self::PROPERTY_FILES . '.' . $this->locale . '.' . $index . '.image', null);
 
                     $index++;
                 }
@@ -216,16 +222,12 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
      * @return array
      */
     protected function getFiles() {
+        $prefix = self::PROPERTY_FILES . '.' . $this->locale . '.';
+
         $result = array();
 
-        $properties = $this->properties->getWidgetProperties();
+        $properties = $this->properties->getWidgetProperties($prefix);
         foreach ($properties as $key => $value) {
-            $prefix = 'files.' . $this->locale . '.';
-
-            if (strpos($key, $prefix) !== 0) {
-                continue;
-            }
-
             $key = str_replace($prefix, '', $key);
 
             list($index, $property) = explode('.', $key);

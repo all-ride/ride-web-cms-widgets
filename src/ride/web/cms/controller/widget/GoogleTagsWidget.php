@@ -22,6 +22,12 @@ class GoogleTagsWidget extends AbstractWidget {
     const ICON = 'img/cms/widget/google-tags.png';
 
     /**
+     * Name of the code property
+     * @var string
+     */
+    const PROPERTY_CODE = 'code';
+
+    /**
      * Namespace for the templates of this widget
      * @var string
      */
@@ -32,7 +38,7 @@ class GoogleTagsWidget extends AbstractWidget {
      * @return null
      */
     public function indexAction() {
-        $code = $this->properties->getWidgetProperty('code');
+        $code = $this->properties->getWidgetProperty(self::PROPERTY_CODE);
         if (!$code) {
             return;
         }
@@ -50,7 +56,7 @@ class GoogleTagsWidget extends AbstractWidget {
         $translator = $this->getTranslator();
         $preview = '';
 
-        $code = $this->properties->getWidgetProperty('code');
+        $code = $this->properties->getWidgetProperty(self::PROPERTY_CODE);
         if ($code) {
             $preview .= '<strong>' . $translator->translate('label.code.google.tags') . '</strong>:' . $code . '<br>';
         }
@@ -68,12 +74,12 @@ class GoogleTagsWidget extends AbstractWidget {
         $translator = $this->getTranslator();
 
         $data = array(
-            'code' => $this->properties->getWidgetProperty('code'),
+            self::PROPERTY_CODE => $this->properties->getWidgetProperty(self::PROPERTY_CODE),
             self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
         $form = $this->createFormBuilder($data);
-        $form->addRow('code', 'string', array(
+        $form->addRow(self::PROPERTY_CODE, 'string', array(
             'label' => $translator->translate('label.code.google.tags'),
             'description' => $translator->translate('label.code.google.tags.description'),
         ));
@@ -98,7 +104,7 @@ class GoogleTagsWidget extends AbstractWidget {
 
                 $data = $form->getData();
 
-                $this->properties->setWidgetProperty('code', $data['code']);
+                $this->properties->setWidgetProperty(self::PROPERTY_CODE, $data[self::PROPERTY_CODE]);
 
                 return true;
             } catch (ValidationException $exception) {
