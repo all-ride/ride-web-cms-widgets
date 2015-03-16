@@ -443,6 +443,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
             'container' => 'label.style.container',
             'title' => 'label.style.title',
             'subtitle' => 'label.style.subtitle',
+            'cta' => 'label.style.cta',
         );
     }
 
