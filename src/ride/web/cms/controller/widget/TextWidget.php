@@ -222,7 +222,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
             self::PROPERTY_IMAGE => $text->getImage(),
             self::PROPERTY_IMAGE_ALIGNMENT => $text->getImageAlignment(),
             self::PROPERTY_CTA => $text->getCallToActions(),
-            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
+            self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/' . static::TEMPLATE_DEFAULT),
         );
         $data['title-use'] = $data[self::PROPERTY_TITLE] || $data[self::PROPERTY_SUBTITLE];
         $data['image-use'] = $data[self::PROPERTY_IMAGE];
