@@ -334,6 +334,13 @@ class TextWidget extends AbstractWidget implements StyleWidget {
                     $form->validate();
 
                     $data = $form->getData();
+                    if (!$data['title-use']) {
+                        $data[self::PROPERTY_TITLE] = '';
+                        $data[self::PROPERTY_SUBTITLE] = '';
+                    }
+                    if (!$data['image-use']) {
+                        $data[self::PROPERTY_IMAGE] = '';
+                    }
 
                     $this->properties->setWidgetProperty(self::PROPERTY_IO, $io->getName());
 
