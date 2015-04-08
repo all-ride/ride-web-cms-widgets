@@ -36,5 +36,6 @@
     "widget.template": "Template",
     "widget.text": "Tekst",
     "widget.text.toc": "Inhoudstafel",
-    "widget.title": "Paginatitel"
+    "widget.title": "Paginatitel",
+    "widget.embed": "Embed"
 }
