@@ -66,10 +66,6 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
             'title' => $title,
             'files' => $files,
         ));
-
-        if ($this->properties->isAutoCache()) {
-            $this->properties->setCache(true);
-        }
     }
 
     /**
@@ -254,6 +250,14 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
             'container' => 'label.style.container',
             'title' => 'label.style.title',
         );
+    }
+
+    /**
+     * Gets whether this widget caches when auto cache is enabled
+     * @return boolean
+     */
+    public function isAutoCache() {
+        return true;
     }
 
 }

@@ -85,10 +85,6 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
         $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
         	'locales' => $urls,
         ));
-
-    	if ($this->properties->isAutoCache()) {
-    	    $this->properties->setCache(true);
-    	}
     }
 
     /**

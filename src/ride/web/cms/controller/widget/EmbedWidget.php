@@ -46,10 +46,6 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
             'embed' => $embed,
         ));
-
-        if ($this->properties->isAutoCache()) {
-            $this->properties->setCache(true);
-        }
     }
 
     /**
@@ -136,6 +132,14 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
         return array(
             'container' => 'label.style.container',
         );
+    }
+
+    /**
+     * Gets whether this widget caches when auto cache is enabled
+     * @return boolean
+     */
+    public function isAutoCache() {
+        return true;
     }
 
 }

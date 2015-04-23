@@ -31,10 +31,6 @@ class BreadcrumbsWidget extends AbstractWidget implements StyleWidget {
      */
     public function indexAction() {
         $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'));
-
-        if ($this->properties->isAutoCache()) {
-            $this->properties->setCache(true);
-        }
     }
 
     /**
@@ -106,6 +102,14 @@ class BreadcrumbsWidget extends AbstractWidget implements StyleWidget {
             'container' => 'label.style.container',
             'menu' => 'label.style.menu',
         );
+    }
+
+    /**
+     * Gets whether this widget caches when auto cache is enabled
+     * @return boolean
+     */
+    public function isAutoCache() {
+        return true;
     }
 
 }

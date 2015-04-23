@@ -118,4 +118,12 @@ class GoogleAnalyticsWidget extends AbstractWidget {
         ));
     }
 
+    /**
+     * Gets whether this widget caches when auto cache is enabled
+     * @return boolean
+     */
+    public function isAutoCache() {
+        return true;
+    }
+
 }
