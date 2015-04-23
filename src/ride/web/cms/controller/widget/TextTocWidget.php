@@ -32,10 +32,6 @@ class TextTocWidget extends AbstractWidget implements StyleWidget {
     public function indexAction() {
         $view = $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'));
         $view->addJavascript('js/cms/text.toc.js');
-
-        if ($this->properties->isAutoCache()) {
-            $this->properties->setCache(true);
-        }
     }
 
     /**
@@ -106,6 +102,14 @@ class TextTocWidget extends AbstractWidget implements StyleWidget {
         return array(
             'container' => 'label.style.container',
         );
+    }
+
+    /**
+     * Gets whether this widget caches when auto cache is enabled
+     * @return boolean
+     */
+    public function isAutoCache() {
+        return true;
     }
 
 }

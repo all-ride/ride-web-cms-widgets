@@ -31,10 +31,6 @@ class TemplateWidget extends AbstractWidget {
      */
     public function indexAction() {
         $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'));
-
-        if ($this->properties->isAutoCache()) {
-            $this->properties->setCache(true);
-        }
     }
 
     /**

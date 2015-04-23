@@ -276,4 +276,12 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         );
     }
 
+    /**
+     * Gets whether this widget caches when auto cache is enabled
+     * @return boolean
+     */
+    public function isAutoCache() {
+        return true;
+    }
+
 }

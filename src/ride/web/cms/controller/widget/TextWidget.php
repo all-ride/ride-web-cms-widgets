@@ -148,10 +148,6 @@ class TextWidget extends AbstractWidget implements StyleWidget {
             'imageAlignment' => $text->getImageAlignment(),
             'callToActions' => $callToActions,
         ));
-
-        if ($this->properties->isAutoCache()) {
-            $this->properties->setCache(true);
-        }
     }
 
     /**
@@ -452,6 +448,14 @@ class TextWidget extends AbstractWidget implements StyleWidget {
             'subtitle' => 'label.style.subtitle',
             'cta' => 'label.style.cta',
         );
+    }
+
+    /**
+     * Gets whether this widget caches when auto cache is enabled
+     * @return boolean
+     */
+    public function isAutoCache() {
+        return true;
     }
 
 }

@@ -134,10 +134,6 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             'nodeTypes' => $this->cms->getNodeTypes(),
             'items' => $nodes,
         ));
-
-        if ($this->properties->isAutoCache()) {
-            $this->properties->setCache(true);
-        }
     }
 
     /**
@@ -331,6 +327,14 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             'title' => 'label.style.title',
             'menu' => 'label.style.menu',
         );
+    }
+
+    /**
+     * Gets whether this widget caches when auto cache is enabled
+     * @return boolean
+     */
+    public function isAutoCache() {
+        return true;
     }
 
 }
