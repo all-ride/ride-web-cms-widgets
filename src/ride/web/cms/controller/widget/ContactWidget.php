@@ -76,6 +76,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         }
 
         $form = $this->createFormBuilder();
+        $form->setAction('contact');
         $form->addRow('name', 'string', array(
             'label' => $translator->translate('label.name'),
             'attributes' => $attributes['name'],
