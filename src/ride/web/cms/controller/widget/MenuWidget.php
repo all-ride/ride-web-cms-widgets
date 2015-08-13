@@ -121,7 +121,6 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             return;
         }
 
-        $nodes = $parentNode->getChildren();
 
         $title = null;
         if ($showTitle) {
@@ -132,7 +131,8 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             'title' => $title,
             'depth' => $depth,
             'nodeTypes' => $this->cms->getNodeTypes(),
-            'items' => $nodes,
+            'parent' => $parentNode,
+            'items' => $parentNode->getChildren(),
         ));
     }
 
