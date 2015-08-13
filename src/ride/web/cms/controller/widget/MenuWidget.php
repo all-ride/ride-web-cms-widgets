@@ -121,7 +121,6 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             return;
         }
 
-
         $title = null;
         if ($showTitle) {
             $title = $parentNode->getName($this->locale);
