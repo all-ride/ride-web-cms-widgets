@@ -24,9 +24,12 @@
     "label.subtitle": "Ondertitel",
     "label.template": "Template",
     "label.title.use": "Gebruik een titel",
+    "label.url.suffix" : "Suffix",
+    "label.url.suffix.description" : "Een suffix voor deze URL, dit kan een anchor (#) of een query string (?) zijn.",
     "success.contact.message.sent": "Bedankt, je boodschap werd verzonden.",
     "widget.breadcrumbs": "Broodkruimels",
     "widget.contact": "Contactformulier",
+    "widget.embed": "Embed",
     "widget.files": "Bestanden",
     "widget.google.analytics": "Google Analytics",
     "widget.google.tags": "Google Tags",
@@ -36,6 +39,5 @@
     "widget.template": "Template",
     "widget.text": "Tekst",
     "widget.text.toc": "Inhoudstafel",
-    "widget.title": "Paginatitel",
-    "widget.embed": "Embed"
+    "widget.title": "Paginatitel"
 }
