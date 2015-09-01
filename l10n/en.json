@@ -25,6 +25,8 @@
     "label.subtitle": "Subtitle",
     "label.template": "Template",
     "label.title.use": "Set a title for this text block",
+    "label.url.suffix" : "Suffix",
+    "label.url.suffix.description" : "Suffix for this URL, can be an anchor (#) or query string (?).",
     "success.contact.message.sent": "Thank you, your message has been sent.",
     "widget.breadcrumbs": "Breadcrumbs",
     "widget.contact": "Contact Form",

@@ -72,6 +72,13 @@ class CallToActionComponent extends AbstractComponent {
                 'trim' => array(),
             )
         ));
+        $builder->addRow('suffix', 'string', array(
+            'label' => $translator->translate('label.url.suffix'),
+            'description' => $translator->translate('label.url.suffix.description'),
+            'filters' => array(
+                'trim' => array(),
+            )
+        ));
         if ($this->types) {
             $builder->addRow('type', 'select', array(
                 'label' => $translator->translate('label.type'),
