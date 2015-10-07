@@ -121,6 +121,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         foreach ($callToActions as $index => $callToAction) {
             $node = $callToAction->getNode();
             $url = $callToAction->getUrl();
+            $suffix = $callToAction->getSuffix();
 
             if ($node) {
                 try {
@@ -134,7 +135,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
                 }
             } elseif ($url) {
                 $callToAction->setUrl($this->properties->getNode()->resolveUrl($this->locale, $this->request->getBaseUrl(), $url));
-            } else {
+            } elseif (!$suffix) {
                 unset($callToActions[$index]);
             }
         }
