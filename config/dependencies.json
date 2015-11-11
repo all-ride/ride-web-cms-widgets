@@ -79,6 +79,16 @@
             "interfaces": "ride\\library\\cms\\widget\\Widget",
             "class": "ride\\web\\cms\\controller\\widget\\GoogleTagsWidget",
             "id": "google.tags"
+        },
+        {
+            "interfaces": "ride\\library\\cms\\widget\\Widget",
+            "class": "ride\\web\\cms\\controller\\widget\\SocialMediaLinksWidget",
+            "id": "social.media.links"
+        },
+        {
+            "interfaces": "ride\\library\\cms\\widget\\Widget",
+            "class": "ride\\web\\cms\\controller\\widget\\SocialMediaShareWidget",
+            "id": "social.media.share"
         }
     ]
 }
