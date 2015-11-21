@@ -153,6 +153,13 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         $form->processView($view);
     }
 
+    /**
+     * Function to handle the sending of contact Email
+     * @param $data
+     * @param $recipient
+     * @param Transport $transport
+     * @throws \ride\library\mail\exception\MailException
+     */
     public function sendMail($data, $recipient, Transport $transport) {
         $message = $transport->createMessage();
         $message->setFrom($data['name'] . ' <' . $data['email'] . '>');
