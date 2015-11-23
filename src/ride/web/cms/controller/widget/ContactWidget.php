@@ -125,20 +125,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
 
                 $data = $form->getData();
 
-                $message = $transport->createMessage();
-                $message->setFrom($data['name'] . ' <' . $data['email'] . '>');
-                $message->setTo($recipient);
-                $message->setSubject($this->getSubject(true));
-                $message->setReplyTo($data['email']);
-                $message->setReturnPath($data['email']);
-                $message->setMessage($data['message']);
-
-                $bcc = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_BCC);
-                if ($bcc) {
-                    $message->setBcc(explode(',', $bcc));
-                }
-
-                $transport->send($message);
+                $this->sendMail($data, $recipient, $transport);
 
                 $finish = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_FINISH_NODE);
                 if ($finish) {
@@ -164,6 +151,31 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         ));
 
         $form->processView($view);
+    }
+
+    /**
+     * Function to handle the sending of contact Email
+     * @param $data
+     * @param $recipient
+     * @param Transport $transport
+     * @throws \ride\library\mail\exception\MailException
+     */
+    public function sendMail($data, $recipient, Transport $transport) {
+        $message = $transport->createMessage();
+        $message->setFrom($data['name'] . ' <' . $data['email'] . '>');
+        $message->setTo($recipient);
+        $message->setSubject($this->getSubject(true));
+        $message->setReplyTo($data['email']);
+        $message->setReturnPath($data['email']);
+        $message->setMessage($data['message']);
+
+        $bcc = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_BCC);
+        if ($bcc) {
+            $message->setBcc(explode(',', $bcc));
+        }
+
+        $transport->send($message);
+
     }
 
     /**
