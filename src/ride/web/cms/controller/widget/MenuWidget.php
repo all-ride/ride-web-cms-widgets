@@ -4,6 +4,9 @@ namespace ride\web\cms\controller\widget;
 
 use ride\library\cms\exception\NodeNotFoundException;
 use ride\library\cms\node\Node;
+use ride\library\validation\constraint\ConditionalConstraint;
+use ride\library\validation\exception\ValidationException;
+use ride\library\validation\factory\ValidationFactory;
 
 use ride\web\cms\Cms;
 
@@ -73,6 +76,12 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
     const PROPERTY_PARENT = 'node';
 
     /**
+     * Setting key for the nodes value
+     * @var string
+     */
+    const PROPERTY_NODES = 'nodes';
+
+    /**
      * Setting key for the depth value
      * @var string
      */
@@ -82,7 +91,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
      * Setting key for the title value
      * @var string
      */
-    const PROPERTY_SHOW_TITLE = 'title';
+    const PROPERTY_TITLE = 'title';
 
     /**
      * Facade to the CMS
@@ -106,32 +115,40 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
     public function indexAction() {
         $parent = $this->getParent();
         $depth = $this->getDepth();
-        $showTitle = $this->getShowTitle();
-
-        if (!$parent) {
-            return;
-        }
 
         $node = $this->properties->getNode();
-        try {
-            $parentNode = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $parent, null, true, $depth);
-        } catch (NodeNotFoundException $exception) {
-            $this->getLog()->logException($exception);
+        if ($parent) {
+            try {
+                $parentNode = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $parent, null, true, $depth);
+            } catch (NodeNotFoundException $exception) {
+                $this->getLog()->logException($exception);
 
-            return;
-        }
+                return;
+            }
 
-        $title = null;
-        if ($showTitle) {
-            $title = $parentNode->getName($this->locale);
+            $items = $parentNode->getChildren();
+        } else {
+            $parentNode = null;
+            $items = array();
+
+            $nodeIds = $this->getNodeIds();
+            foreach ($nodeIds as $nodeId) {
+                try {
+                    $items[$nodeId] = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $nodeId, null, true, $depth);
+                } catch (NodeNotFoundException $exception) {
+                    $this->getLog()->logException($exception);
+
+                    return;
+                }
+            }
         }
 
         $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
-            'title' => $title,
+            'title' => $this->getTitle($parentNode),
             'depth' => $depth,
             'nodeTypes' => $this->cms->getNodeTypes(),
             'parent' => $parentNode,
-            'items' => $parentNode->getChildren(),
+            'items' => $items,
         ));
     }
 
@@ -141,14 +158,13 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
      */
     public function getPropertiesPreview() {
         $translator = $this->getTranslator();
+        $node = $this->properties->getNode();
 
         $parent = $this->getParent();
         $depth = $this->getDepth();
-        $showTitle = $this->getShowTitle();
+        $title = $this->getTitle();
 
         if ($parent) {
-            $node = $this->properties->getNode();
-
             try {
                 $parentNode = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $parent);
                 $parent = $parentNode->getName($this->locale);
@@ -156,13 +172,30 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
                 $parent = 'unexistant';
             }
         } else {
-            $parent = '---';
+            $nodeIds = $this->getNodeIds();
+            $nodes = array();
+
+            foreach ($nodeIds as $nodeId) {
+                try {
+                    $n = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $nodeId);
+                    $nodes[] = $n->getName($this->locale);
+                } catch (NodeNotFoundException $exception) {
+
+                }
+            }
         }
 
         $preview = '';
-        $preview .= '<strong>' . $translator->translate('label.menu.parent') . '</strong>: ' . $parent . '<br>';
+
+        if ($parent) {
+            $preview .= '<strong>' . $translator->translate('label.menu.parent') . '</strong>: ' . $parent . '<br>';
+        } else {
+            $preview .= '<strong>' . $translator->translate('label.menu.nodes') . '</strong>: ' . implode(', ', $nodes) . '<br>';
+        }
         $preview .= '<strong>' . $translator->translate('label.menu.depth') . '</strong>: ' . $depth . '<br>';
-        $preview .= '<strong>' . $translator->translate('label.title.show') . '</strong>: ' . $translator->translate($showTitle ? 'label.yes' : 'label.no') . '<br>';
+        if ($title) {
+            $preview .= '<strong>' . $translator->translate('label.title') . '</strong>: ' . $title . '<br>';
+        }
         $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default') . '<br>';
 
         return $preview;
@@ -172,7 +205,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
      * Action to handle and show the properties of this widget
      * @return null
      */
-    public function propertiesAction() {
+    public function propertiesAction(ValidationFactory $validationFactory) {
         $translator = $this->getTranslator();
 
         $node = $this->properties->getNode();
@@ -196,30 +229,82 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             $depths[$i] = $i;
         }
 
+        $title = $this->properties->getWidgetProperty(self::PROPERTY_TITLE);
+        if ($title) {
+            $showTitle = true;
+            $title = $title == 1 ? '' : $title;
+        } else {
+            $showTitle = false;
+            $title = null;
+        }
+
         $data = array(
             self::PROPERTY_PARENT => $this->getParent(false),
+            self::PROPERTY_NODES => $this->getNodeIds(),
             self::PROPERTY_DEPTH => $this->getDepth(),
-            self::PROPERTY_SHOW_TITLE => $this->getShowTitle(),
+            self::PROPERTY_TITLE . '-show' => $showTitle,
+            self::PROPERTY_TITLE => $title,
             self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
+        if ($data[self::PROPERTY_NODES]) {
+            $data[self::PROPERTY_PARENT . '-select'] = self::PROPERTY_NODES;
+        } else {
+            $data[self::PROPERTY_PARENT . '-select'] = self::PROPERTY_PARENT;
+        }
+
         $form = $this->createFormBuilder($data);
+        $form->addRow(self::PROPERTY_PARENT . '-select', 'option', array(
+            'label' => $translator->translate('label.menu.base'),
+            'default' => 'parent',
+            'options' => array(
+                self::PROPERTY_PARENT => $translator->translate('label.menu.parent'),
+                self::PROPERTY_NODES => $translator->translate('label.menu.nodes'),
+            ),
+            'attributes' => array(
+                'data-toggle-dependant' => 'option-node-select',
+            ),
+            'validators' => array(
+                'required' => array(),
+            )
+        ));
         $form->addRow(self::PROPERTY_PARENT, 'select', array(
             'label' => $translator->translate('label.menu.parent'),
             'description' => $translator->translate('label.menu.parent.description'),
             'options' => $nodeList,
-            'validators' => array(
-                'required' => array(),
-            )
+            'attributes' => array(
+                'class' => 'option-node-select option-node-select-' . self::PROPERTY_PARENT,
+            ),
+            'hide-optional' => true,
+        ));
+        $form->addRow(self::PROPERTY_NODES, 'select', array(
+            'label' => $translator->translate('label.menu.nodes'),
+            'description' => $translator->translate('label.menu.nodes.description'),
+            'options' => $nodeList,
+            'attributes' => array(
+                'class' => 'option-node-select option-node-select-' . self::PROPERTY_NODES,
+            ),
+            'multiple' => true,
+            'hide-optional' => true,
         ));
         $form->addRow(self::PROPERTY_DEPTH, 'select', array(
             'label' => $translator->translate('label.menu.depth'),
             'description' => $translator->translate('label.menu.depth.description'),
             'options' => $depths,
         ));
-        $form->addRow(self::PROPERTY_SHOW_TITLE, 'option', array(
+        $form->addRow(self::PROPERTY_TITLE . '-show', 'option', array(
             'label' => $translator->translate('label.title.show'),
             'description' => $translator->translate('label.menu.title.show.description'),
+            'attributes' => array(
+                'data-toggle-dependant' => 'option-title',
+            ),
+        ));
+        $form->addRow(self::PROPERTY_TITLE, 'string', array(
+            'label' => $translator->translate('label.title'),
+            'description' => $translator->translate('label.menu.title.description'),
+            'attributes' => array(
+                'class' => 'option-title option-title-1',
+            ),
         ));
         $form->addRow(self::PROPERTY_TEMPLATE, 'select', array(
             'label' => $translator->translate('label.template'),
@@ -228,6 +313,19 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
                 'required' => array(),
             ),
         ));
+
+        $requiredValidator = $validationFactory->createValidator('required', array());
+
+        $urlRequired = new ConditionalConstraint();
+        $urlRequired->addValueCondition(self::PROPERTY_PARENT . '-select', self::PROPERTY_PARENT);
+        $urlRequired->addValidator($requiredValidator, self::PROPERTY_PARENT);
+
+        $fileRequired = new ConditionalConstraint();
+        $fileRequired->addValueCondition(self::PROPERTY_PARENT . '-select', self::PROPERTY_NODES);
+        $fileRequired->addValidator($requiredValidator, self::PROPERTY_NODES);
+
+        $form->addValidationConstraint($urlRequired);
+        $form->addValidationConstraint($fileRequired);
 
         $form = $form->build();
         if ($form->isSubmitted()) {
@@ -240,9 +338,23 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
 
                 $data = $form->getData();
 
-                $this->properties->setWidgetProperty(self::PROPERTY_PARENT, $data[self::PROPERTY_PARENT]);
+                if ($data[self::PROPERTY_TITLE]) {
+                    $title = $data[self::PROPERTY_TITLE];
+                } elseif ($data[self::PROPERTY_TITLE . '-show']) {
+                    $title = '1';
+                } else {
+                    $title = null;
+                }
+
+                if ($data[self::PROPERTY_PARENT . '-select'] == self::PROPERTY_PARENT) {
+                    $this->properties->setWidgetProperty(self::PROPERTY_PARENT, $data[self::PROPERTY_PARENT]);
+                    $this->properties->setWidgetProperty(self::PROPERTY_NODES);
+                } else {
+                    $this->properties->setWidgetProperty(self::PROPERTY_PARENT);
+                    $this->properties->setWidgetProperty(self::PROPERTY_NODES, implode(',', $data[self::PROPERTY_NODES]));
+                }
                 $this->properties->setWidgetProperty(self::PROPERTY_DEPTH, $data[self::PROPERTY_DEPTH]);
-                $this->properties->setWidgetProperty(self::PROPERTY_SHOW_TITLE, $data[self::PROPERTY_SHOW_TITLE]);
+                $this->properties->setWidgetProperty(self::PROPERTY_TITLE, $title);
 
                 $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
 
@@ -252,9 +364,12 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             }
         }
 
-        $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
+        $view = $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
             'form' => $form->getView(),
         ));
+        $view->addJavascript('js/form.js');
+
+        $form->processView($view);
 
         return false;
     }
@@ -265,9 +380,8 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
      * @return string
      */
     private function getParent($fetchNodeId = true) {
-        $parent = $this->properties->getWidgetProperty(self::PROPERTY_PARENT, self::DEFAULT_PARENT);
-
-        if (!$fetchNodeId) {
+        $parent = $this->properties->getWidgetProperty(self::PROPERTY_PARENT);
+        if (!$parent || !$fetchNodeId) {
             return $parent;
         }
 
@@ -300,6 +414,27 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
     }
 
     /**
+     * Get the value for the selected nodes
+     * @param boolean $fetchNodeId Set to false to skip the lookup of the node id
+     * @return string
+     */
+    private function getNodeIds() {
+        $nodes = $this->properties->getWidgetProperty(self::PROPERTY_NODES);
+        if (!$nodes) {
+            return array();
+        }
+
+        $nodeIds = explode(',', $nodes);
+
+        $nodes = array();
+        foreach ($nodeIds as $nodeId) {
+            $nodes[$nodeId] = $nodeId;
+        }
+
+        return $nodes;
+    }
+
+    /**
      * Get the depth value
      * @return integer
      */
@@ -307,12 +442,35 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
         return $this->properties->getWidgetProperty(self::PROPERTY_DEPTH, self::DEFAULT_DEPTH);
     }
 
-    /**
-     * Get the show title value
-     * @return boolean
-     */
-    private function getShowTitle() {
-        return $this->properties->getWidgetProperty(self::PROPERTY_SHOW_TITLE, self::DEFAULT_SHOW_TITLE);
+    private function getTitle(Node $parentNode = null) {
+        $title = $this->properties->getWidgetProperty(self::PROPERTY_TITLE);
+        if (!$title) {
+            return null;
+        } elseif ($title == 1) {
+            if (!$parentNode) {
+                $parentNodeId = $this->getParent();
+                if (!$parentNodeId) {
+                    return null;
+                }
+
+                try {
+                    $node = $this->properties->getNode();
+                    $parentNode = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $parentNodeId);
+                } catch (NodeNotFoundException $exception) {
+                    $this->getLog()->logException($exception);
+
+                    return;
+                }
+            }
+
+            if ($parentNode) {
+                $title = $parentNode->getName($this->locale);
+            } else {
+                $title = null;
+            }
+        }
+
+        return $title;
     }
 
     /**
