@@ -174,7 +174,7 @@ class FilesWidget extends AbstractWidget implements StyleWidget {
 
                 $data = $form->getData();
 
-                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE, $data[self::PROPERTY_TITLE]);
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE, $data[self::PROPERTY_TITLE] ? $data[self::PROPERTY_TITLE] : null);
 
                 $index = 1;
                 foreach ($data[self::PROPERTY_FILES] as $file) {

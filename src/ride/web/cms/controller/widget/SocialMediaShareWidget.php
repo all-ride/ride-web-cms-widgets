@@ -79,12 +79,12 @@ class SocialMediaShareWidget extends AbstractWidget implements StyleWidget{
         $translator = $this->getTranslator();
 
         $data = array(
-            'title' => $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE),
+            self::PROPERTY_TITLE => $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE),
             'shareMedia' => explode(',', $this->properties->getWidgetProperty(self::PROPERTY_SHARE_MEDIA)),
         );
 
         $form = $this->createFormBuilder($data);
-        $form->addRow('title', 'string', array(
+        $form->addRow(self::PROPERTY_TITLE, 'string', array(
             'label' => $translator->translate('label.title'),
         ));
         $form->addRow('shareMedia', 'option', array(
@@ -122,7 +122,7 @@ class SocialMediaShareWidget extends AbstractWidget implements StyleWidget{
                     $values = implode(',', array_keys($data['shareMedia']));
                     $this->properties->setWidgetProperty(self::PROPERTY_SHARE_MEDIA, $values);
                 }
-                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE, $data['title']);
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE, $data[self::PROPERTY_TITLE] ? $data[self::PROPERTY_TITLE] : null);
 
                 return true;
             } catch (ValidationException $exception) {
