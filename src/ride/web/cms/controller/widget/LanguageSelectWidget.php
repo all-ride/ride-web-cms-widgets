@@ -36,32 +36,13 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
 
         $locales = $i18n->getLocales();
         $node = $this->properties->getNode();
+        $site = $node->getRootNodeId();
 
         $content = $this->getContext('content');
         if (isset($content->type)) {
             $contentMapper = $this->getContentFacade()->getContentMapper($content->type);
-            $site = $node->getRootNodeId();
         } else {
             $content = null;
-
-            $url = $this->request->getUrl();
-            $route = $this->request->getRoute();
-
-            $routeId = $route->getId();
-            if (!$routeId) {
-                $routeId = 'cms.node.frontend.locale';
-            }
-
-            $routeUrl = $this->getUrl($routeId, array(
-                'site' => $node->getRootNodeId(),
-                'revision' => $node->getRevision(),
-                'node' => $node->getId(),
-                'locale' => $this->locale,
-            ));
-
-            $suffix = $url;
-            $suffix = str_replace($routeUrl, '', $suffix);
-            $suffix = str_replace($node->getRoute($this->locale), '', $suffix);
         }
 
         foreach ($locales as $localeCode => $locale) {
@@ -76,7 +57,7 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
                 );
             } else {
                 $urls[$localeCode] = array(
-                    'url' => $node->getUrl($localeCode, $this->request->getBaseScript()), // . $suffix,
+                    'url' => $this->getUrl('cms.front.' . $site . '.' . $node->getId() . '.' . $localeCode),
                     'locale' => $locale,
                 );
             }
