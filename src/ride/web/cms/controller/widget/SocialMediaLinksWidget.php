@@ -141,7 +141,7 @@ class SocialMediaLinksWidget extends AbstractWidget implements StyleWidget{
                 if ($values) {
                     $this->properties->setWidgetProperty('social.widgets', serialize($values));
                 }
-                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE, $data['title'] ? $data['title'] : '');
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE, $data['title'] ? $data['title'] : null);
 
 
                 return true;

@@ -275,7 +275,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
 
                 $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_RECIPIENT, $data[self::PROPERTY_RECIPIENT]);
                 $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_BCC, implode(',', $data['bcc']));
-                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_SUBJECT, $data[self::PROPERTY_SUBJECT]);
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_SUBJECT, $data[self::PROPERTY_SUBJECT] ? $data[self::PROPERTY_SUBJECT] : null);
                 $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_FINISH_NODE, $data['finishNode']);
 
                 $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
