@@ -220,8 +220,9 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         $bcc = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_BCC);
         if ($bcc) {
             $bcc = explode(',', $bcc);
+        } else {
+            $bcc = array();
         }
-
         $data = array(
             self::PROPERTY_RECIPIENT => $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_RECIPIENT),
             self::PROPERTY_BCC => $bcc,
