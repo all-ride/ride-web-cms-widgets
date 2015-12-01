@@ -87,7 +87,7 @@ class SocialMediaShareWidget extends AbstractWidget implements StyleWidget{
         $form->addRow(self::PROPERTY_TITLE, 'string', array(
             'label' => $translator->translate('label.title'),
         ));
-        $form->addRow('shareMedia', 'option', array(
+        $form->addRow(self::PROPERTY_SHARE_MEDIA, 'option', array(
             'label' => $translator->translate('label.social.media'),
             'options' => array(
                 'email' => 'Email',
