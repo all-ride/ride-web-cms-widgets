@@ -31,7 +31,7 @@ class SocialMediaShareWidget extends AbstractWidget implements StyleWidget{
      * Name of the share media property
      * @var string
      */
-    const PROPERTY_SHARE_MEDIA = 'share.media';
+    const PROPERTY_SHARE_MEDIA = 'shareMedia';
 
     /**
      * Name of title property
@@ -118,8 +118,8 @@ class SocialMediaShareWidget extends AbstractWidget implements StyleWidget{
             try {
                 $form->validate();
                 $data = $form->getData();
-                if ($data['shareMedia']) {
-                    $values = implode(',', array_keys($data['shareMedia']));
+                if ($data[self::PROPERTY_SHARE_MEDIA]) {
+                    $values = implode(',', array_keys($data[self::PROPERTY_SHARE_MEDIA]));
                     $this->properties->setWidgetProperty(self::PROPERTY_SHARE_MEDIA, $values);
                 }
                 $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE, $data[self::PROPERTY_TITLE] ? $data[self::PROPERTY_TITLE] : null);
