@@ -26,6 +26,12 @@ class GenericCallToAction implements CallToAction {
     protected $url;
 
     /**
+     * Suffix to append after the URL
+     * @var string
+     */
+    protected $suffix;
+
+    /**
      * Name of the icon
      * @var string
      */
@@ -80,6 +86,23 @@ class GenericCallToAction implements CallToAction {
      */
     public function getUrl() {
         return $this->url;
+    }
+
+    /**
+     * Sets the suffix
+     * @param string $suffix
+     * @return null
+     */
+    public function setSuffix($suffix) {
+        $this->suffix = $suffix;
+    }
+
+    /**
+     * Gets the suffix
+     * @return string
+     */
+    public function getSuffix() {
+        return $this->suffix;
     }
 
     /**
