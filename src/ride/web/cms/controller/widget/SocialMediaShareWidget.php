@@ -80,8 +80,10 @@ class SocialMediaShareWidget extends AbstractWidget implements StyleWidget{
 
         $data = array(
             self::PROPERTY_TITLE => $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE),
-            'shareMedia' => explode(',', $this->properties->getWidgetProperty(self::PROPERTY_SHARE_MEDIA)),
         );
+        if ($this->properties->getWidgetProperty(self::PROPERTY_SHARE_MEDIA)) {
+            $data[self::PROPERTY_SHARE_MEDIA] = explode(',', $this->properties->getWidgetProperty(self::PROPERTY_SHARE_MEDIA));
+        }
 
         $form = $this->createFormBuilder($data);
         $form->addRow(self::PROPERTY_TITLE, 'string', array(
