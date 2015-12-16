@@ -125,7 +125,7 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
 
                 $data = $form->getData();
 
-                $this->sendMail($data, $recipient, $transport);
+                $this->sendMail($data, $recipient);
 
                 $finish = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_FINISH_NODE);
                 if ($finish) {
@@ -160,14 +160,22 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
      * @param Transport $transport
      * @throws \ride\library\mail\exception\MailException
      */
-    public function sendMail($data, $recipient, Transport $transport) {
+    public function sendMail($data, $recipient) {
+        $transport = $this->dependencyInjector->get('ride\\library\\mail\\transport\\Transport');
+        $templateService = $this->dependencyInjector->get('ride\\web\\base\\service\\TemplateService');
+
+        $template = $templateService->createTemplate(static::TEMPLATE_NAMESPACE . '/mail', array(
+            'data' => $data,
+        ));
+
         $message = $transport->createMessage();
         $message->setFrom($data['name'] . ' <' . $data['email'] . '>');
         $message->setTo($recipient);
         $message->setSubject($this->getSubject(true));
         $message->setReplyTo($data['email']);
         $message->setReturnPath($data['email']);
-        $message->setMessage($data['message']);
+        $message->setIsHtmlMessage(true);
+        $message->setMessage($templateService->render($template));
 
         $bcc = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_BCC);
         if ($bcc) {
