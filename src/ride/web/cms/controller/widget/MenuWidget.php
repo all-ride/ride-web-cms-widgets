@@ -229,7 +229,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             $depths[$i] = $i;
         }
 
-        $title = $this->properties->getWidgetProperty(self::PROPERTY_TITLE);
+        $title = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE);
         if ($title) {
             $showTitle = true;
             $title = $title == 1 ? '' : $title;
@@ -354,7 +354,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
                     $this->properties->setWidgetProperty(self::PROPERTY_NODES, implode(',', $data[self::PROPERTY_NODES]));
                 }
                 $this->properties->setWidgetProperty(self::PROPERTY_DEPTH, $data[self::PROPERTY_DEPTH]);
-                $this->properties->setWidgetProperty(self::PROPERTY_TITLE, $title);
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE, $title);
 
                 $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
 
