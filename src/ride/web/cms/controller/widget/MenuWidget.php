@@ -442,11 +442,22 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
         return $this->properties->getWidgetProperty(self::PROPERTY_DEPTH, self::DEFAULT_DEPTH);
     }
 
+    /**
+     * Gets the title for this widget based on the properties
+     * @param \ride\library\cms\node\node $parentNode
+     * @return string|null
+     */
     private function getTitle(Node $parentNode = null) {
-        $title = $this->properties->getWidgetProperty(self::PROPERTY_TITLE);
+        $title = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE);
+        if ($title === null) {
+            $title = $this->properties->getWidgetProperty(self::PROPERTY_TITLE);
+        }
+
         if (!$title) {
+            // no title, return null
             return null;
         } elseif ($title == 1) {
+            // title is set to 1, use name of the parent node
             if (!$parentNode) {
                 $parentNodeId = $this->getParent();
                 if (!$parentNodeId) {
@@ -459,7 +470,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
                 } catch (NodeNotFoundException $exception) {
                     $this->getLog()->logException($exception);
 
-                    return;
+                    return null;
                 }
             }
 
