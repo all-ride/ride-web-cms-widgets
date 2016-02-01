@@ -106,9 +106,6 @@ class SocialMediaShareWidget extends AbstractWidget implements StyleWidget{
             'multiple' => true,
             'widget' => 'select',
             'order' => true,
-            'validators' => array(
-                'required' => array()
-            ),
         ));
 
         $form = $form->build();
