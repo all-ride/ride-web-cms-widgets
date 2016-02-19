@@ -128,7 +128,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
                 try {
                     $node = $nodeModel->getNode($propertiesNode->getRootNodeId(), $propertiesNode->getRevision(), $node);
 
-                    $callToAction->setUrl($this->getUrl('cms.front.' . $rootNodeId . '.' . $node->getId() . '.' . $this->locale) . $callToAction->getSuffix());
+                    $callToAction->setUrl($this->getUrl('cms.front.' . $rootNodeId . '.' . $node->getId() . '.' . $this->locale));
                 } catch (NodeNotFoundException $exception) {
                     $this->getLog()->logException($exception);
 
