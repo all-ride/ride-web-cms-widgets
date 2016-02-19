@@ -128,14 +128,16 @@ class TextWidget extends AbstractWidget implements StyleWidget {
                 try {
                     $node = $nodeModel->getNode($propertiesNode->getRootNodeId(), $propertiesNode->getRevision(), $node);
 
-                    $callToAction->setUrl($this->getUrl('cms.front.' . $rootNodeId . '.' . $node->getId() . '.' . $this->locale));
+                    $callToAction->setUrl($this->getUrl('cms.front.' . $rootNodeId . '.' . $node->getId() . '.' . $this->locale) . $callToAction->getSuffix());
                 } catch (NodeNotFoundException $exception) {
                     $this->getLog()->logException($exception);
 
                     unset($callToActions[$index]);
                 }
             } elseif ($url) {
-                $callToAction->setUrl($this->properties->getNode()->resolveUrl($this->locale, $this->request->getBaseUrl(), $url));
+                $callToAction->setUrl($this->properties->getNode()->resolveUrl($this->locale, $this->request->getBaseUrl(), $url) . $callToAction->getSuffix());
+            } elseif ($suffix) {
+                $callToAction->setUrl($this->request->getUrl() . $callToAction->getSuffix());
             } elseif (!$suffix) {
                 unset($callToActions[$index]);
             }
