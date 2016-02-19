@@ -135,7 +135,9 @@ class TextWidget extends AbstractWidget implements StyleWidget {
                     unset($callToActions[$index]);
                 }
             } elseif ($url) {
-                $callToAction->setUrl($this->properties->getNode()->resolveUrl($this->locale, $this->request->getBaseUrl(), $url));
+                $callToAction->setUrl($this->properties->getNode()->resolveUrl($this->locale, $this->request->getBaseUrl(), $url) . $callToAction->getSuffix());
+            } elseif ($suffix) {
+                $callToAction->setUrl($this->request->getUrl() . $callToAction->getSuffix());
             } elseif (!$suffix) {
                 unset($callToActions[$index]);
             }
