@@ -38,7 +38,7 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
      * @return null
      */
     public function indexAction() {
-        $embed = $this->properties->getWidgetProperty(self::PROPERTY_EMBED);
+        $embed = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_EMBED);
         if (!$embed) {
             return;
         }
@@ -53,7 +53,7 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
      * @return string
      */
     public function getPropertiesPreview() {
-        $embed = $this->properties->getWidgetProperty(self::PROPERTY_EMBED);
+        $embed = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_EMBED);
 
         $translator = $this->getTranslator();
         $preview = '';
@@ -72,7 +72,7 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
         $translator = $this->getTranslator();
 
         $data = array(
-            self::PROPERTY_EMBED => $this->properties->getWidgetProperty(self::PROPERTY_EMBED),
+            self::PROPERTY_EMBED => $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_EMBED),
             self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
@@ -106,7 +106,7 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
 
                 $data = $form->getData();
 
-                $this->properties->setWidgetProperty(self::PROPERTY_EMBED, $data[self::PROPERTY_EMBED]);
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_EMBED, $data[self::PROPERTY_EMBED]);
 
                 $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
 
