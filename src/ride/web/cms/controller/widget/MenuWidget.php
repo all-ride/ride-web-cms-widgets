@@ -159,7 +159,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
     public function getPropertiesPreview() {
         $translator = $this->getTranslator();
         $node = $this->properties->getNode();
-        $isPermissionGranted = $this->getSecurityManager()->isPermissionGranted('cms.widget.advanced.view');
+        $isPermissionGranted = $this->getSecurityManager()->isPermissionGranted('cms.advanced');
 
         $parent = $this->getParent();
         $depth = $this->getDepth();

@@ -58,7 +58,7 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
         $translator = $this->getTranslator();
         $preview = '';
 
-        if ($this->getSecurityManager()->isPermissionGranted('cms.widget.advanced.view')) {
+        if ($this->getSecurityManager()->isPermissionGranted('cms.advanced')) {
             $template = $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default');
         } else {
             $template = $this->getTemplateName($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'));
