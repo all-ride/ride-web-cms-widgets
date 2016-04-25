@@ -42,6 +42,11 @@ class TemplateWidget extends AbstractWidget {
 
         $template  =(substr($this->getTemplate('/default'), strrpos($this->getTemplate(), '/') + 1));
 
+        if ($this->getSecurityManager()->isPermissionGranted('cms.widget.advanced.view')) {
+            $template = $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default');
+        } else {
+            $template = $this->getTemplateName($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'));
+        }
         $preview = '<strong>' . $translator->translate('label.template') . '</strong>: ' . $template . '<br>';
 
         return $preview;

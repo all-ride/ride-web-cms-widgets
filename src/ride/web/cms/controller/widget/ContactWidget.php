@@ -213,7 +213,12 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
             $preview .= '<strong>' . $translator->translate('label.node.finish') . '</strong>: ' . $finish . '<br>';
         }
 
-        $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default') . '<br>';
+        if ($this->getSecurityManager()->isPermissionGranted('cms.widget.advanced.view')) {
+            $template = $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default');
+        } else {
+            $template = $this->getTemplateName($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'));
+        }
+        $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $template . '<br>';
 
         return $preview;
     }

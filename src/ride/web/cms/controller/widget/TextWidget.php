@@ -183,7 +183,12 @@ class TextWidget extends AbstractWidget implements StyleWidget {
         if ($subtitle) {
             $preview .= '<strong>' . $translator->translate('label.subtitle') . '</strong>: ' . $subtitle . '<br>';
         }
-        $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $this->getTemplate(static::TEMPLATE_NAMESPACE . '/' . static::TEMPLATE_DEFAULT) . '<br>';
+        if ($this->getSecurityManager()->isPermissionGranted('cms.widget.advanced.view')) {
+            $template = $this->getTemplate(static::TEMPLATE_NAMESPACE . '/' . static::TEMPLATE_DEFAULT);
+        } else {
+            $template = $this->getTemplateName($this->getTemplate(static::TEMPLATE_NAMESPACE . '/' . static::TEMPLATE_DEFAULT));
+        }
+        $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $template . '<br>';
 
         $preview .= $body;
 
