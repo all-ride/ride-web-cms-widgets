@@ -159,6 +159,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
     public function getPropertiesPreview() {
         $translator = $this->getTranslator();
         $node = $this->properties->getNode();
+        $isPermissionGranted = $this->getSecurityManager()->isPermissionGranted('cms.widget.advanced.view');
 
         $parent = $this->getParent();
         $depth = $this->getDepth();
@@ -192,11 +193,18 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
         } else {
             $preview .= '<strong>' . $translator->translate('label.menu.nodes') . '</strong>: ' . implode(', ', $nodes) . '<br>';
         }
-        $preview .= '<strong>' . $translator->translate('label.menu.depth') . '</strong>: ' . $depth . '<br>';
+        if ($isPermissionGranted) {
+            $preview .= '<strong>' . $translator->translate('label.menu.depth') . '</strong>: ' . $depth . '<br>';
+        }
         if ($title) {
             $preview .= '<strong>' . $translator->translate('label.title') . '</strong>: ' . $title . '<br>';
         }
-        $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default') . '<br>';
+        if ($isPermissionGranted) {
+            $template = $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default');
+        } else {
+            $template = $this->getTemplateName($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'));
+        }
+        $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $template . '<br>';
 
         return $preview;
     }

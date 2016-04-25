@@ -58,7 +58,13 @@ class EmbedWidget extends AbstractWidget implements StyleWidget {
         $translator = $this->getTranslator();
         $preview = '';
 
-        $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default') . '<br>';
+        if ($this->getSecurityManager()->isPermissionGranted('cms.widget.advanced.view')) {
+            $template = $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default');
+        } else {
+            $template = $this->getTemplateName($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'));
+        }
+        $preview .= '<strong>' . $translator->translate('label.template') . '</strong>: ' . $template . '<br>';
+        
         $preview .= StringHelper::truncate(htmlentities($embed), 120) . '<br>';
 
         return $preview;

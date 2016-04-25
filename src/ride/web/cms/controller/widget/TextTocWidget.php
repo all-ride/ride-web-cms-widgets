@@ -41,7 +41,12 @@ class TextTocWidget extends AbstractWidget implements StyleWidget {
     public function getPropertiesPreview() {
         $translator = $this->getTranslator();
 
-        $preview = '<strong>' . $translator->translate('label.template') . '</strong>: ' . $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default') . '<br />';
+        if ($this->getSecurityManager()->isPermissionGranted('cms.widget.advanced.view')) {
+            $template = $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default');
+        } else {
+            $template = $this->getTemplateName($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'));
+        }
+        $preview = '<strong>' . $translator->translate('label.template') . '</strong>: ' . $template . '<br>';
 
         return $preview;
     }
