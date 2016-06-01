@@ -29,6 +29,12 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
     const ICON = 'img/cms/widget/contact.png';
 
     /**
+     * Name of the sender property
+     * @var string
+     */
+    const PROPERTY_SENDER = 'sender';
+
+    /**
      * Name of the recipient property
      * @var string
      */
@@ -169,7 +175,6 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         ));
 
         $message = $transport->createMessage();
-        $message->setFrom($data['name'] . ' <' . $data['email'] . '>');
         $message->setTo($recipient);
         $message->setSubject($this->getSubject(true));
         $message->setReplyTo($data['email']);
@@ -177,13 +182,17 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         $message->setIsHtmlMessage(true);
         $message->setMessage($templateService->render($template));
 
+        $sender = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_SENDER);
+        if ($sender) {
+            $message->setFrom($sender);
+        }
+
         $bcc = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_BCC);
         if ($bcc) {
             $message->setBcc(explode(',', $bcc));
         }
 
         $transport->send($message);
-
     }
 
     /**
@@ -194,6 +203,10 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         $translator = $this->getTranslator();
         $preview = '';
 
+        $sender = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_SENDER);
+        if ($sender) {
+            $preview .= '<strong>' . $translator->translate('label.sender') . '</strong>: ' . $sender . '<br>';
+        }
         $recipient = $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_RECIPIENT);
         if ($recipient) {
             $preview .= '<strong>' . $translator->translate('label.recipient') . '</strong>: ' . $recipient . '<br>';
@@ -236,7 +249,9 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         } else {
             $bcc = array();
         }
+
         $data = array(
+            self::PROPERTY_SENDER => $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_SENDER),
             self::PROPERTY_RECIPIENT => $this->properties->getLocalizedWidgetProperty($this->locale, self::PROPERTY_RECIPIENT),
             self::PROPERTY_BCC => $bcc,
             self::PROPERTY_SUBJECT => $this->getSubject(),
@@ -247,6 +262,12 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
         $form = $this->createFormBuilder($data);
         $form->addRow(self::PROPERTY_SUBJECT, 'string', array(
             'label' => $translator->translate('label.subject'),
+            'filters' => array(
+                'trim' => array(),
+            ),
+        ));
+        $form->addRow(self::PROPERTY_SENDER, 'email', array(
+            'label' => $translator->translate('label.sender'),
             'filters' => array(
                 'trim' => array(),
             ),
@@ -287,10 +308,11 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
 
                 $data = $form->getData();
 
-                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_RECIPIENT, $data[self::PROPERTY_RECIPIENT]);
-                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_BCC, implode(',', $data['bcc']));
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_SENDER, $data[self::PROPERTY_SENDER] ? $data[self::PROPERTY_SENDER] : null);
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_RECIPIENT, $data[self::PROPERTY_RECIPIENT]) ? $data[self::PROPERTY_RECIPIENT] : null;
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_BCC, $data[self::PROPERTY_BCC] ? implode(',', $data[self::PROPERTY_BCC]) : null);
                 $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_SUBJECT, $data[self::PROPERTY_SUBJECT] ? $data[self::PROPERTY_SUBJECT] : null);
-                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_FINISH_NODE, $data['finishNode']);
+                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_FINISH_NODE, $data['finishNode'] ? $data['finishNode'] : null);
 
                 $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
 

@@ -33,6 +33,7 @@
     "label.node.finish": "Finish",
     "label.node.finish.description": "Select the node of the finish page",
     "label.recipient": "Recipient",
+    "label.sender": "From",
     "label.social.media": "Social media",
     "label.social.media.account.name": "Username",
     "label.social.media.name": "Social medium",

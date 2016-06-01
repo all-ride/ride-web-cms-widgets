@@ -136,8 +136,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
                 try {
                     $items[$nodeId] = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $nodeId, null, true, $depth);
                 } catch (NodeNotFoundException $exception) {
-                    $widgetId = $this->properties->getWidgetId();
-                    $this->getLog()->logWarning("Could not add node " . $nodeId . " to menu#" . $widgetId . " in region " . $this->region);
+                    $this->getLog()->logWarning("Could not add node " . $nodeId . " to menu#" . $this->id . " in region " . $this->region);
                 }
             }
         }
