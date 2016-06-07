@@ -349,7 +349,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
                 } elseif ($data[self::PROPERTY_TITLE . '-show']) {
                     $title = '1';
                 } else {
-                    $title = null;
+                    $title = '0';
                 }
 
                 if ($data[self::PROPERTY_PARENT . '-select'] == self::PROPERTY_PARENT) {
