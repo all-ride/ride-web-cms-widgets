@@ -63,6 +63,8 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
             }
         }
 
+        $this->setContext('localizedUrls', $urls);
+
         $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
         	'locales' => $urls,
         ));
