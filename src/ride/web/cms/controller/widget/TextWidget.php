@@ -384,6 +384,7 @@ class TextWidget extends AbstractWidget implements StyleWidget {
             'io' => $io,
             'format' => $format,
             'text' => $text,
+            'locale' => $this->locale,
             'action' => $action,
         ));
         $view->addJavascript('js/cms/text.js');
