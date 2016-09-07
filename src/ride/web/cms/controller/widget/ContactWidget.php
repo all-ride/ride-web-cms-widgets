@@ -322,9 +322,11 @@ class ContactWidget extends AbstractWidget implements StyleWidget {
             }
         }
 
-        $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
+        $view = $this->setTemplateView(static::TEMPLATE_NAMESPACE . '/properties', array(
             'form' => $form->getView(),
         ));
+
+        $form->processView($view);
 
         return false;
     }
