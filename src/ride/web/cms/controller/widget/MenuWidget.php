@@ -9,6 +9,7 @@ use ride\library\validation\exception\ValidationException;
 use ride\library\validation\factory\ValidationFactory;
 
 use ride\web\cms\Cms;
+use ride\web\WebApplication;
 
 /**
  * Widget to show a menu of the node tree or a part thereof
@@ -82,6 +83,12 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
     const PROPERTY_NODES = 'nodes';
 
     /**
+     * Setting key for the widget value
+     * @var string
+     */
+    const PROPERTY_WIDGETS = 'widgets';
+
+    /**
      * Setting key for the depth value
      * @var string
      */
@@ -116,8 +123,12 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
         $parent = $this->getParent();
         $depth = $this->getDepth();
 
+        $parentNode = null;
+        $items = null;
+
         $node = $this->properties->getNode();
         if ($parent) {
+            // create menu from parent node
             try {
                 $parentNode = $this->cms->getNode($node->getRootNodeId(), $node->getRevision(), $parent, null, true, $depth);
             } catch (NodeNotFoundException $exception) {
@@ -127,8 +138,8 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             }
 
             $items = $parentNode->getChildren();
-        } else {
-            $parentNode = null;
+        } elseif (!$this->properties->getWidgetProperty(self::PROPERTY_WIDGETS)) {
+            // create menu from selected nodes
             $items = array();
 
             $nodeIds = $this->getNodeIds();
@@ -139,12 +150,22 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
                     $this->getLog()->logWarning("Could not add node " . $nodeId . " to menu#" . $this->id . " in region " . $this->region);
                 }
             }
+        } else {
+            // create menu from widget titles in context
+            $items = false;
+
+            // register event to parse the registered titles from the title widget
+            // @see \ride\web\cms\MenuWidgetApplicationListener
+            // @see TitleWidget
+            $eventManager = $this->dependencyInjector->get('ride\\library\\event\\EventManager');
+            $menuWidgetApplicationListener = $this->dependencyInjector->get('ride\\web\\cms\\MenuWidgetApplicationListener');
+            $eventManager->addEventListener(WebApplication::EVENT_PRE_RESPONSE, array($menuWidgetApplicationListener, 'prepareTemplateView'));
         }
 
         $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
+            'nodeTypes' => $this->cms->getNodeTypes(),
             'title' => $this->getTitle($parentNode),
             'depth' => $depth,
-            'nodeTypes' => $this->cms->getNodeTypes(),
             'parent' => $parentNode,
             'items' => $items,
         ));
@@ -188,10 +209,10 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
 
         if ($parent) {
             $preview .= '<strong>' . $translator->translate('label.menu.parent') . '</strong>: ' . $parent . '<br>';
-        } else {
+        } elseif ($nodes) {
             $preview .= '<strong>' . $translator->translate('label.menu.nodes') . '</strong>: ' . implode(', ', $nodes) . '<br>';
         }
-        if ($isPermissionGranted) {
+        if ($isPermissionGranted && ($parent || $nodes)) {
             $preview .= '<strong>' . $translator->translate('label.menu.depth') . '</strong>: ' . $depth . '<br>';
         }
         if ($title) {
@@ -244,6 +265,8 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             $title = null;
         }
 
+        $widgets = $this->properties->getWidgetProperty(self::PROPERTY_WIDGETS);
+
         $data = array(
             self::PROPERTY_PARENT => $this->getParent(false),
             self::PROPERTY_NODES => $this->getNodeIds(),
@@ -253,7 +276,9 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             self::PROPERTY_TEMPLATE => $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'),
         );
 
-        if ($data[self::PROPERTY_NODES]) {
+        if ($widgets) {
+            $data[self::PROPERTY_PARENT . '-select'] = self::PROPERTY_WIDGETS;
+        } elseif ($data[self::PROPERTY_NODES]) {
             $data[self::PROPERTY_PARENT . '-select'] = self::PROPERTY_NODES;
         } else {
             $data[self::PROPERTY_PARENT . '-select'] = self::PROPERTY_PARENT;
@@ -266,6 +291,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
             'options' => array(
                 self::PROPERTY_PARENT => $translator->translate('label.menu.parent'),
                 self::PROPERTY_NODES => $translator->translate('label.menu.nodes'),
+                self::PROPERTY_WIDGETS => $translator->translate('label.menu.widgets'),
             ),
             'attributes' => array(
                 'data-toggle-dependant' => 'option-node-select',
@@ -286,7 +312,7 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
         $form->addRow(self::PROPERTY_NODES, 'select', array(
             'label' => $translator->translate('label.menu.nodes'),
             'description' => $translator->translate('label.menu.nodes.description'),
-            'options' => $nodeList,
+            'options' => $this->cms->getNodeList($site, $this->locale, false, true, true),
             'attributes' => array(
                 'class' => 'option-node-select option-node-select-' . self::PROPERTY_NODES,
             ),
@@ -322,16 +348,16 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
 
         $requiredValidator = $validationFactory->createValidator('required', array());
 
-        $urlRequired = new ConditionalConstraint();
-        $urlRequired->addValueCondition(self::PROPERTY_PARENT . '-select', self::PROPERTY_PARENT);
-        $urlRequired->addValidator($requiredValidator, self::PROPERTY_PARENT);
+        $parentRequired = new ConditionalConstraint();
+        $parentRequired->addValueCondition(self::PROPERTY_PARENT . '-select', self::PROPERTY_PARENT);
+        $parentRequired->addValidator($requiredValidator, self::PROPERTY_PARENT);
 
-        $fileRequired = new ConditionalConstraint();
-        $fileRequired->addValueCondition(self::PROPERTY_PARENT . '-select', self::PROPERTY_NODES);
-        $fileRequired->addValidator($requiredValidator, self::PROPERTY_NODES);
+        $nodesRequired = new ConditionalConstraint();
+        $nodesRequired->addValueCondition(self::PROPERTY_PARENT . '-select', self::PROPERTY_NODES);
+        $nodesRequired->addValidator($requiredValidator, self::PROPERTY_NODES);
 
-        $form->addValidationConstraint($urlRequired);
-        $form->addValidationConstraint($fileRequired);
+        $form->addValidationConstraint($parentRequired);
+        $form->addValidationConstraint($nodesRequired);
 
         $form = $form->build();
         if ($form->isSubmitted()) {
@@ -344,6 +370,8 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
 
                 $data = $form->getData();
 
+                $data[self::PROPERTY_WIDGETS] = null;
+
                 if ($data[self::PROPERTY_TITLE]) {
                     $title = $data[self::PROPERTY_TITLE];
                 } elseif ($data[self::PROPERTY_TITLE . '-show']) {
@@ -353,13 +381,23 @@ class MenuWidget extends AbstractWidget implements StyleWidget {
                 }
 
                 if ($data[self::PROPERTY_PARENT . '-select'] == self::PROPERTY_PARENT) {
-                    $this->properties->setWidgetProperty(self::PROPERTY_PARENT, $data[self::PROPERTY_PARENT]);
-                    $this->properties->setWidgetProperty(self::PROPERTY_NODES);
+                    $data[self::PROPERTY_NODES] = null;
+                    $data[self::PROPERTY_WIDGETS] = null;
+                } elseif ($data[self::PROPERTY_PARENT . '-select'] == self::PROPERTY_NODES) {
+                    $data[self::PROPERTY_PARENT] = null;
+                    $data[self::PROPERTY_NODES] = implode(',', $data[self::PROPERTY_NODES]);
+                    $data[self::PROPERTY_WIDGETS] = null;
                 } else {
-                    $this->properties->setWidgetProperty(self::PROPERTY_PARENT);
-                    $this->properties->setWidgetProperty(self::PROPERTY_NODES, implode(',', $data[self::PROPERTY_NODES]));
+                    $data[self::PROPERTY_PARENT] = null;
+                    $data[self::PROPERTY_NODES] = null;
+                    $data[self::PROPERTY_WIDGETS] = 1;
                 }
+
+                $this->properties->setWidgetProperty(self::PROPERTY_PARENT, $data[self::PROPERTY_PARENT]);
+                $this->properties->setWidgetProperty(self::PROPERTY_NODES, $data[self::PROPERTY_NODES]);
+                $this->properties->setWidgetProperty(self::PROPERTY_WIDGETS, $data[self::PROPERTY_WIDGETS]);
                 $this->properties->setWidgetProperty(self::PROPERTY_DEPTH, $data[self::PROPERTY_DEPTH]);
+
                 $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE, $title);
 
                 $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
