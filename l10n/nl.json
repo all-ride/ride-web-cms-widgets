@@ -14,6 +14,7 @@
     "label.fields.required": "Alle velden zijn verplicht.",
     "label.file": "Bestand",
     "label.files": "Bestanden",
+    "label.heading": "Niveau",
     "label.image.use": "Gebruik een afbeelding",
     "label.label": "Label",
     "label.menu.base": "Dit menu moet gebaseerd worden op",
@@ -28,6 +29,7 @@
     "label.menu.parent.relative": "Node op relatief niveau %level%",
     "label.menu.title.description": "Voer de titel in of laat dit veld leeg om de naam van de basis node te gebruiken",
     "label.menu.title.show.description": "Toon een titel boven dit menu",
+    "label.menu.widgets": "Widget titels met een anker",
     "label.message": "Boodschap",
     "label.name": "Naam",
     "label.node.finish": "Bevestiging",
@@ -42,6 +44,13 @@
     "label.subject": "Onderwerp",
     "label.subtitle": "Ondertitel",
     "label.template": "Template",
+    "label.title.anchor": "Anker",
+    "label.title.anchor.description": "Maak een ankerpunt van deze titel zodat deze titel linkbaar is",
+    "label.title.custom": "Een eigen titel",
+    "label.title.description": "Geef de titel die je wenst weer te geven",
+    "label.title.heading.description": "Selecteer het niveau van de titel, 1 is gereserveerd voor de pagina titel",
+    "label.title.page": "De pagina titel",
+    "label.title.type": "Wat voor titel wil je weergeven?",
     "label.title.use": "Gebruik een titel",
     "label.url.suffix": "Suffix",
     "label.url.suffix.description": "Een suffix voor deze URL, dit kan een anchor (#) of een query string (?) zijn.",
@@ -127,5 +136,5 @@
     "widget.template": "Template",
     "widget.text": "Tekst",
     "widget.text.toc": "Inhoudstafel",
-    "widget.title": "Paginatitel"
+    "widget.title": "Titel"
 }
