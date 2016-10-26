@@ -1,3 +1,8 @@
+## [1.1.1] - 2016-10-26
+
+### Updated
+- title widget used PERMISSION_ADVANCED constant which is not yet available, replaced by string
+
 ## [1.1.0] - 2016-10-25
 
 ### Updated

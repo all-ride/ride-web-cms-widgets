@@ -111,7 +111,7 @@ class TitleWidget extends AbstractWidget implements StyleWidget {
             $anchor = $translator->translate('label.no');
         }
 
-        if ($this->getSecurityManager()->isPermissionGranted(Cms::PERMISSION_ADVANCED)) {
+        if ($this->getSecurityManager()->isPermissionGranted('cms.advanced')) {
             $template = $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default');
         } else {
             $template = $this->getTemplateName($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'));
