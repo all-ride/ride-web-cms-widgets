@@ -1,4 +1,4 @@
-## Unreleased
+## [1.2.0] - 2016-11-04
 ### Updated
 - language select widget to support a localized unique site
 
