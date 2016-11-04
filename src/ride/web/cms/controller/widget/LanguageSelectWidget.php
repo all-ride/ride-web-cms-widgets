@@ -2,17 +2,20 @@
 
 namespace ride\web\cms\controller\widget;
 
+use ride\library\cms\node\Node;
+use ride\library\cms\Cms;
 use ride\library\i18n\I18n;
+use ride\library\router\exception\RouterException;
 
 /**
  * Widget to change the current locale
  */
 class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
 
-	/**
-	 * Machine name of this widget
-	 * @var string
-	 */
+    /**
+     * Machine name of this widget
+     * @var string
+     */
     const NAME = 'language.select';
 
     /**
@@ -31,13 +34,33 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
      * Sets a title view to the response
      * @return null
      */
-    public function indexAction(I18n $i18n) {
-        $urls = array();
-
+    public function indexAction(Cms $cms, I18n $i18n) {
         $locales = $i18n->getLocales();
         $node = $this->properties->getNode();
-        $site = $node->getRootNodeId();
+        $site = $node->getRootNode();
 
+        if ($site->isLocalizationMethodCopy()) {
+            $urls = $this->getUrlsForCopyTree($site, $node, $locales);
+        } else {
+            $urls = $this->getUrlsForUniqueTree($cms, $site, $node, $locales);
+        }
+
+        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
+            'locales' => $urls,
+        ));
+    }
+
+    /**
+     * Gets the localized URL's for the current page in a localized copy site
+     * @param \ride\library\cms\node\Node $site Instance of the site
+     * @param \ride\library\cms\node\Node $node Instance of the node
+     * @param array $locales All the locales
+     * @return array Array with the localized URL's
+     */
+    private function getUrlsForCopyTree(Node $site, Node $node, array $locales) {
+        $urls = array();
+
+        // check for a content detail to localize detail pages
         $content = $this->getContext('content');
         if (isset($content->type)) {
             $contentMapper = $this->getContentFacade()->getContentMapper($content->type);
@@ -45,6 +68,7 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
             $content = null;
         }
 
+        // gather the localized URL's for the provided node
         foreach ($locales as $localeCode => $locale) {
             if (!$node->isAvailableInLocale($localeCode)) {
                 continue;
@@ -52,22 +76,84 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
 
             if ($content) {
                 $urls[$localeCode] = array(
-                    'url' => $contentMapper->getUrl($site, $localeCode, $content->data),
+                    'url' => $contentMapper->getUrl($site->getId(), $localeCode, $content->data),
                     'locale' => $locale,
                 );
             } else {
                 $urls[$localeCode] = array(
-                    'url' => $this->getUrl('cms.front.' . $site . '.' . $node->getId() . '.' . $localeCode),
+                    'url' => $this->getUrl('cms.front.' . $site->getId() . '.' . $node->getId() . '.' . $localeCode),
                     'locale' => $locale,
                 );
             }
         }
 
+        // copy tree, put the localized URL's to the context
         $this->setContext('localizedUrls', $urls);
 
-        $this->setTemplateView($this->getTemplate(static::TEMPLATE_NAMESPACE . '/default'), array(
-        	'locales' => $urls,
-        ));
+        return $urls;
+    }
+
+    /**
+     * Gets the localized URL's for the home page in a localized unique site
+     * @param \ride\library\cms\Cms $cms Instance of the CMS
+     * @param \ride\library\cms\node\Node $site Instance of the site
+     * @param \ride\library\cms\node\Node $node Instance of the node
+     * @param array $locales All the locales
+     * @return array Array with the localized URL's
+     */
+    private function getUrlsForUniqueTree(Cms $cms, Node $site, Node $node, array $locales) {
+        $nodes = $cms->getNodeModel()->getNodes($site->getId(), $site->getRevision());
+
+        $baseUrl = $this->request->getBaseScript();
+        $urls = array();
+
+        // gather the localized URL's for the home pages
+        foreach ($locales as $localeCode => $locale) {
+            if (!$site->isAvailableInLocale($localeCode)) {
+                continue;
+            }
+
+            $url = null;
+            $home = null;
+
+            foreach ($nodes as $n) {
+                if (!$n->isHomepage($localeCode)) {
+                    continue;
+                }
+
+                $home = $n;
+
+                break;
+            }
+
+            if ($home) {
+                try {
+                    $url = $this->getUrl('cms.front.' . $site->getId() . '.' . $home->getId() . '.' . $localeCode);
+                } catch (RouterException $exception) {
+                    $url = null;
+                }
+            }
+
+            if (!$url) {
+                $url = $site->getBaseUrl($localeCode);
+                if (!$url) {
+                    $url = $baseUrl;
+                }
+            }
+
+            $urls[$localeCode] = array(
+                'url' => $url,
+                'locale' => $locale,
+            );
+        }
+
+        if ($node->isHomePage($this->locale)) {
+            // unique tree, no relations between the pages so we put the
+            // localized URL's only on the context of the homepage
+            $this->setContext('localizedUrls', $urls);
+        }
+
+        return $urls;
     }
 
     /**
