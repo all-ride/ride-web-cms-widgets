@@ -32,11 +32,6 @@
         },
         {
             "interfaces": "ride\\library\\cms\\widget\\Widget",
-            "class": "ride\\web\\cms\\controller\\widget\\FilesWidget",
-            "id": "files"
-        },
-        {
-            "interfaces": "ride\\library\\cms\\widget\\Widget",
             "class": "ride\\web\\cms\\controller\\widget\\LanguageSelectWidget",
             "id": "language.select"
         },
@@ -62,23 +57,8 @@
         },
         {
             "interfaces": "ride\\library\\cms\\widget\\Widget",
-            "class": "ride\\web\\cms\\controller\\widget\\TextTocWidget",
-            "id": "text.toc"
-        },
-        {
-            "interfaces": "ride\\library\\cms\\widget\\Widget",
             "class": "ride\\web\\cms\\controller\\widget\\TitleWidget",
             "id": "title"
-        },
-        {
-            "interfaces": "ride\\library\\cms\\widget\\Widget",
-            "class": "ride\\web\\cms\\controller\\widget\\GoogleAnalyticsWidget",
-            "id": "google.analytics"
-        },
-        {
-            "interfaces": "ride\\library\\cms\\widget\\Widget",
-            "class": "ride\\web\\cms\\controller\\widget\\GoogleTagsWidget",
-            "id": "google.tags"
         },
         {
             "interfaces": "ride\\library\\cms\\widget\\Widget",
