@@ -1,3 +1,9 @@
+## [2.0.0] - 2017-01-24
+### Updated
+- updated language select widget, added isAvailable flag for each locale which complements the url variable
+### Removed
+- removed files, google analytics, google tag manager and toc widget
+
 ## [1.2.0] - 2016-11-04
 ### Updated
 - language select widget to support a localized unique site

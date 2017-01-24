@@ -40,7 +40,7 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
         $site = $node->getRootNode();
 
         if ($site->isLocalizationMethodCopy()) {
-            $urls = $this->getUrlsForCopyTree($site, $node, $locales);
+            $urls = $this->getUrlsForCopyTree($cms, $site, $node, $locales);
         } else {
             $urls = $this->getUrlsForUniqueTree($cms, $site, $node, $locales);
         }
@@ -57,7 +57,7 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
      * @param array $locales All the locales
      * @return array Array with the localized URL's
      */
-    private function getUrlsForCopyTree(Node $site, Node $node, array $locales) {
+    private function getUrlsForCopyTree(Cms $cms, Node $site, Node $node, array $locales) {
         $urls = array();
 
         // check for a content detail to localize detail pages
@@ -70,21 +70,39 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
 
         // gather the localized URL's for the provided node
         foreach ($locales as $localeCode => $locale) {
-            if (!$node->isAvailableInLocale($localeCode)) {
-                continue;
+            $url = null;
+            $isAvailable = false;
+
+            if ($node->isAvailableInLocale($localeCode)) {
+                if ($content) {
+                    $url = $contentMapper->getUrl($site->getId(), $localeCode, $content->data);
+                } else {
+                    try {
+                        $url = $this->getUrl('cms.front.' . $site->getId() . '.' . $node->getId() . '.' . $localeCode);
+                    } catch (RouterException $exception) {
+                        $url = null;
+                    }
+                }
             }
 
-            if ($content) {
-                $urls[$localeCode] = array(
-                    'url' => $contentMapper->getUrl($site->getId(), $localeCode, $content->data),
-                    'locale' => $locale,
-                );
+            if ($url) {
+                $isAvailable = true;
             } else {
-                $urls[$localeCode] = array(
-                    'url' => $this->getUrl('cms.front.' . $site->getId() . '.' . $node->getId() . '.' . $localeCode),
-                    'locale' => $locale,
-                );
+                $home = $cms->getHomeNode($site->getId(), $site->getRevision(), $localeCode);
+                if ($home) {
+                    try {
+                        $url = $this->getUrl('cms.front.' . $site->getId() . '.' . $home->getId() . '.' . $localeCode);
+                    } catch (RouterException $exception) {
+                        $url = null;
+                    }
+                }
             }
+
+            $urls[$localeCode] = array(
+                'url' => $url,
+                'locale' => $locale,
+                'isAvailable' => $isAvailable,
+            );
         }
 
         // copy tree, put the localized URL's to the context
@@ -115,6 +133,7 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
 
             $url = null;
             $home = null;
+            $isAvailable = false;
 
             foreach ($nodes as $n) {
                 if (!$n->isHomepage($localeCode)) {
@@ -129,6 +148,7 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
             if ($home) {
                 try {
                     $url = $this->getUrl('cms.front.' . $site->getId() . '.' . $home->getId() . '.' . $localeCode);
+                    $isAvailable = true;
                 } catch (RouterException $exception) {
                     $url = null;
                 }
@@ -144,6 +164,7 @@ class LanguageSelectWidget extends AbstractWidget implements StyleWidget {
             $urls[$localeCode] = array(
                 'url' => $url,
                 'locale' => $locale,
+                'isAvailable' => $isAvailable,
             );
         }
 
