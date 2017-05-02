@@ -1,3 +1,7 @@
+## [2.0.1] - 2017-05-02
+### Updated
+- fixed title widget when setting custom title back to page title
+
 ## [2.0.0] - 2017-01-24
 ### Updated
 - updated language select widget, added isAvailable flag for each locale which complements the url variable
