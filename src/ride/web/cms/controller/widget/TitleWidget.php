@@ -210,12 +210,15 @@ class TitleWidget extends AbstractWidget implements StyleWidget {
                 $data = $form->getData();
 
                 if ($data['type'] == 'page') {
-                    $data[self::PROPERTY_TITLE] = null;
                     $data[self::PROPERTY_HEADING] = null;
                     $data[self::PROPERTY_ANCHOR] = null;
+
+                    $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE, null);
+                    $this->properties->setWidgetProperty(self::PROPERTY_TITLE, null);
+                } else {
+                    $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE, $data[self::PROPERTY_TITLE]);
                 }
 
-                $this->properties->setLocalizedWidgetProperty($this->locale, self::PROPERTY_TITLE, $data[self::PROPERTY_TITLE]);
                 $this->properties->setWidgetProperty(self::PROPERTY_HEADING, $data[self::PROPERTY_HEADING]);
                 $this->properties->setWidgetProperty(self::PROPERTY_ANCHOR, $data[self::PROPERTY_ANCHOR] ? "1" : null);
                 $this->setTemplate($data[self::PROPERTY_TEMPLATE]);
