@@ -1,3 +1,7 @@
+## [2.0.2] - 2017-06-01
+### Updated
+- Changed social media urls to https
+
 ## [2.0.1] - 2017-05-02
 ### Updated
 - fixed title widget when setting custom title back to page title
