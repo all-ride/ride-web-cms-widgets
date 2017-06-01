@@ -2,28 +2,28 @@
     "cms.text.format": "wysiwyg",
     "social": {
         "facebook": {
-            "baseUrl": "http://www.facebook.com",
-            "profileUrl": "http://www.facebook.com/"
+            "baseUrl": "https://www.facebook.com",
+            "profileUrl": "https://www.facebook.com/"
         },
         "twitter": {
-            "baseUrl": "http://www.twitter.com",
-            "profileUrl": "http://www.twitter.com/"
+            "baseUrl": "https://www.twitter.com",
+            "profileUrl": "https://www.twitter.com/"
         },
         "youtube": {
-            "baseUrl": "http://www.youtube.com/",
-            "profileUrl": "http://www.youtube.com/user/"
+            "baseUrl": "https://www.youtube.com/",
+            "profileUrl": "https://www.youtube.com/user/"
         },
         "instagram": {
-            "baseUrl": "http://www.instagram.com",
-            "profileUrl": "http://www.instagram.com/"
+            "baseUrl": "https://www.instagram.com",
+            "profileUrl": "https://www.instagram.com/"
         },
         "google": {
             "baseUrl": "https://plus.google.com",
             "profileUrl": "https://plus.google.com/+"
         },
         "linkedIn": {
-            "baseUrl": "http://www.linkedin.com",
-            "profileUrl": "http://www.linkedin.com/profile/view?id="
+            "baseUrl": "https://www.linkedin.com",
+            "profileUrl": "https://www.linkedin.com/profile/view?id="
         }
     }
 }
