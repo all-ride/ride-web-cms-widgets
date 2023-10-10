@@ -1,3 +1,6 @@
+## [2.1.0] - 2023-10-10
+## Updated
+- Added fix for checking strrpos of possible empty value
 ## [2.0.2] - 2017-06-01
 ### Updated
 - Changed social media urls to https

@@ -40,7 +40,8 @@ class TemplateWidget extends AbstractWidget {
     public function getPropertiesPreview() {
         $translator = $this->getTranslator();
 
-        $template  =(substr($this->getTemplate('/default'), strrpos($this->getTemplate(), '/') + 1));
+        $template = $this->getTemplate() ?: '';
+        $template  =(substr($this->getTemplate('/default'), strrpos($template, '/') + 1));
 
         if ($this->getSecurityManager()->isPermissionGranted('cms.advanced')) {
             $template = $this->getTemplate(static::TEMPLATE_NAMESPACE . '/default');
